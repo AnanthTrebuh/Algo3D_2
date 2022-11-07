@@ -8,20 +8,26 @@
 	<script type="text/javascript" src="callbacks.js"></script>
 	<script type="text/javascript" src="glCourseBasis.js"></script>
 	<script type="text/javascript" src="objLoader.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
 
 </head>
 
 
 <body onload="webGLStart(); ">
-	<canvas id="WebGL-test" style="border:none;" width="800" height="600"></canvas>
-	<div>
-		<input type="checkbox" value="Load" onclick="setMirror()" id="mirror">Miroir</input>
-	</div>
-		<div class="slidecontainer">
-			<p>Réfraction</p>
-			<input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-		  </div>
-	
+	<table>
+		<td>
+			<canvas id="WebGL-test" style="border:none;" width="800" height="600"></canvas>
+		</td>
+		<td>
+			<div class="align-top">
+				<input type="checkbox" value="Load" onclick="setMirror()" id="mirror">Miroir</input>
+
+				<p>Réfraction</p>
+				<input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+			</div>
+		</td>	
+	</table>
 	<br><br>
 </body>
 
