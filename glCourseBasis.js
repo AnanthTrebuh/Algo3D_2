@@ -7,6 +7,8 @@ var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
 var rotMatrix = mat4.create();
 var distCENTER;
+var textureCube;
+var isMirror = true;
 // =====================================================
 
 var OBJ1 = null;
@@ -45,9 +47,17 @@ class objmesh {
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.mesh.normalBuffer);
 		gl.vertexAttribPointer(this.shader.nAttrib, this.mesh.vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
+		gl.bindTexture(gl.TEXTURE_CUBE_MAP, textureCube);
+
+		this.shader.uSkyboxUniform = gl.getUniformLocation(this.shader, "uSkybox")
+		gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
+		gl.uniform1i(this.shader.uSkyboxUniform, 0);
+
 		this.shader.rMatrixUniform = gl.getUniformLocation(this.shader, "uRMatrix");
 		this.shader.mvMatrixUniform = gl.getUniformLocation(this.shader, "uMVMatrix");
 		this.shader.pMatrixUniform = gl.getUniformLocation(this.shader, "uPMatrix");
+
+		this.shader.isMirrorUniform = gl.getUniformLocation(this.shader, "uIsMirror")
 	}
 	
 	// --------------------------------------------
@@ -58,6 +68,7 @@ class objmesh {
 		gl.uniformMatrix4fv(this.shader.rMatrixUniform, false, rotMatrix);
 		gl.uniformMatrix4fv(this.shader.mvMatrixUniform, false, mvMatrix);
 		gl.uniformMatrix4fv(this.shader.pMatrixUniform, false, pMatrix);
+		gl.uniform1i(this.shader.isMirrorUniform, this.isMirror);
 	}
 	
 	// --------------------------------------------
@@ -108,21 +119,6 @@ class cube {
 			4, 6, 5, 	4, 7, 6, /* back */ 
 			1, 5, 6, 	1, 6, 2 /* right */ 
 		]
-
-		// load on buffer
-		// vertecies
-		this.vBuffer = gl.createBuffer()
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.vBuffer)
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW)
-		this.vBuffer.itemSize = 3
-		this.vBuffer.numItems = 8
-
-		// indexs
-		this.iBuffer = gl.createBuffer()
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.iBuffer)
-		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW)
-		this.iBuffer.itemSize = 1
-		this.iBuffer.numItems = 36
 
 		// Create a texture.
 	  
@@ -180,10 +176,25 @@ class cube {
 			gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
 		  }
 		})
+		textureCube = this.texture;
 		gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
 		gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 
-		
+		// load on buffer
+		// vertecies
+		this.vBuffer = gl.createBuffer()
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.vBuffer)
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW)
+		this.vBuffer.itemSize = 3
+		this.vBuffer.numItems = 8
+
+		// indexs
+		this.iBuffer = gl.createBuffer()
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.iBuffer)
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW)
+		this.iBuffer.itemSize = 1
+		this.iBuffer.numItems = 36
+
 
 	}
 
@@ -197,7 +208,7 @@ class cube {
 		gl.vertexAttribPointer(this.shader.vAttrib, this.vBuffer.itemSize, gl.FLOAT, false, 0, 0)
 
 		this.shader.uSkyboxUniform = gl.getUniformLocation(this.shader, "uSkybox")
-		//gl.activeTexture(gl.TEXTURE_CUBE_MAP);
+		//gl.activeTexture(gl.TEXTURE_CUBE_MAP); // genere des warnings
 		gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
 		gl.uniform1i(this.shader.uSkyboxUniform, 0);
 
@@ -224,13 +235,6 @@ class cube {
 	// --------------------------------------------
 	draw() {
         if (this.shader && this.loaded == 4) {
-            // gl.useProgram(this.shader);
-            // gl.uniform1i(this.shader.uSkybox, 0);
-            // gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
-            // this.setShadersParams()
-            // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.iBuffer)
-            // this.setShadersParams();
-            // gl.drawElements(gl.TRIANGLES, this.iBuffer.numItems , gl.UNSIGNED_SHORT, 0)
 			this.setShadersParams()
 			this.setMatrixUniforms()
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.iBuffer)
@@ -449,7 +453,7 @@ function webGLStart() {
 	
 	PLANE = new plane();
 	CUBE = new cube();
-	OBJ1 = new objmesh('bunny.obj');
+	OBJ1 = new objmesh('sphere.obj');
 	//OBJ2 = new objmesh('porsche.obj');
 	
 	tick();
@@ -458,7 +462,7 @@ function webGLStart() {
 // =====================================================
 function drawScene() {
 	gl.clear(gl.COLOR_BUFFER_BIT);
-	PLANE.draw();
+	//PLANE.draw();
 	CUBE.draw();
 	OBJ1.draw();
 	//OBJ2.draw();
