@@ -109,36 +109,53 @@ class cube {
 			1, 5, 6, 	1, 6, 2 /* right */ 
 		]
 
+		// load on buffer
+		// vertecies
+		this.vBuffer = gl.createBuffer()
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.vBuffer)
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW)
+		this.vBuffer.itemSize = 3
+		this.vBuffer.numItems = 8
+
+		// indexs
+		this.iBuffer = gl.createBuffer()
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.iBuffer)
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW)
+		this.iBuffer.itemSize = 1
+		this.iBuffer.numItems = 36
+
 		// Create a texture.
-		var texture = gl.createTexture();
-		gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
 	  
 		const faceInfos = [
 		  {
 			target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-			url: 'skybox/right.jpg',
+			url: './skybox/right.jpg',
 		  },
 		  {
 			target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-			url: 'skybox/left.jpg',
+			url: './skybox/left.jpg',
 		  },
 		  {
 			target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-			url: 'skybox/top.jpg',
+			url: './skybox/top.jpg',
 		  },
 		  {
 			target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-			url: 'skybox/bottom.jpg',
+			url: './skybox/bottom.jpg',
 		  },
 		  {
 			target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-			url: 'skybox/front.jpg',
+			url: './skybox/front.jpg',
 		  },
 		  {
 			target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-			url: 'skybox/back.jpg',
+			url: './skybox/back.jpg',
 		  },
 		];
+
+		this.texture = gl.createTexture();
+		gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
+
 		faceInfos.forEach((faceInfo) => {
 		  const {target, url} = faceInfo;
 	  
@@ -156,32 +173,17 @@ class cube {
 		  // Asynchronously load an image
 		  const image = new Image();
 		  image.src = url;
-		  image.addEventListener('load', function() {
+		  image.onload= () => {
 			// Now that the image has loaded make copy it to the texture.
-			gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+			gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
 			gl.texImage2D(target, level, internalFormat, format, type, image);
 			gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-		  });
-		});
+		  }
+		})
 		gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
 		gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
-	  
+
 		
-
-		// load on buffer
-		// vertecies
-		this.vBuffer = gl.createBuffer()
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.vBuffer)
-		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW)
-		this.vBuffer.itemSize = 3
-		this.vBuffer.numItems = 8
-
-		// indexs
-		this.iBuffer = gl.createBuffer()
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.iBuffer)
-		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW)
-		this.iBuffer.itemSize = 1
-		this.iBuffer.numItems = 36
 
 	}
 
@@ -194,17 +196,16 @@ class cube {
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.vBuffer)
 		gl.vertexAttribPointer(this.shader.vAttrib, this.vBuffer.itemSize, gl.FLOAT, false, 0, 0)
 
-
 		this.shader.uSkyboxUniform = gl.getUniformLocation(this.shader, "uSkybox")
-		gl.activeTexture(gl.TEXTURE_CUBE_MAP);
-		gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+		//gl.activeTexture(gl.TEXTURE_CUBE_MAP);
+		gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
 		gl.uniform1i(this.shader.uSkyboxUniform, 0);
 
 		this.shader.pMatrixUniform = gl.getUniformLocation(this.shader, "uPMatrix")
 		this.shader.mvMatrixUniform = gl.getUniformLocation(this.shader, "uMVMatrix")
 
 		mat4.identity(mvMatrix)
-		// mat4.translate(mvMatrix, distCENTER)
+		mat4.translate(mvMatrix, distCENTER)
 		mat4.multiply(mvMatrix, rotMatrix)
 
 		gl.uniformMatrix4fv(this.shader.pMatrixUniform, false, pMatrix)
@@ -222,19 +223,20 @@ class cube {
 
 	// --------------------------------------------
 	draw() {
-		if (this.shader && this.loaded == 36+8) {
+        if (this.shader && this.loaded == 4) {
+            // gl.useProgram(this.shader);
+            // gl.uniform1i(this.shader.uSkybox, 0);
+            // gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+            // this.setShadersParams()
+            // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.iBuffer)
+            // this.setShadersParams();
+            // gl.drawElements(gl.TRIANGLES, this.iBuffer.numItems , gl.UNSIGNED_SHORT, 0)
 			this.setShadersParams()
 			this.setMatrixUniforms()
-			gl.activeTexture(gl.TEXTURE_CUBE_MAP);
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.iBuffer)
 			gl.drawElements(gl.TRIANGLES, this.iBuffer.numItems , gl.UNSIGNED_SHORT, 0)
-
-			// draw the cube
-			gl.drawArrays(gl.TRIANGLES, 0, this.vBuffer.numItems)
-
-
-		}
-	}
+        }
+    }
 }
 
 // =====================================================
