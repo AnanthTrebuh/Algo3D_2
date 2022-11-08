@@ -17,7 +17,7 @@ var PLANE = null;
 var CUBE = null;
 
 var objet = "sphere";
-var sliderValue = null;
+var sliderValue = 0.5;
 
 
 // =====================================================
@@ -79,6 +79,7 @@ class objmesh {
 		gl.uniformMatrix4fv(this.shader.pMatrixUniform, false, pMatrix);
 		gl.uniform1i(this.shader.isMirrorUniform, this.isMirror);
 		gl.uniform1i(this.shader.isRefracUniform, this.isRefrac);
+		gl.uniform1f(this.shader.refractValue, sliderValue);
 	}
 	
 	// --------------------------------------------
@@ -500,7 +501,7 @@ function setRefrac() {
 		console.log("Refrac : "+this.isRefrac);
 }
 
-function getSliderval() {
+function getSliderVal() {
 		sliderValue =  document.getElementById("slider").value/100;
 		console.log("sliderValue : "+sliderValue);
 }
