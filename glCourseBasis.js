@@ -15,7 +15,7 @@ var OBJ1 = null;
 var PLANE = null;
 var CUBE = null;
 
-var mirror = false; 
+var objet = "sphere";
 
 
 // =====================================================
@@ -443,7 +443,7 @@ function compileShaders(Obj3D)
 function webGLStart() {
 	
 	var canvas = document.getElementById("WebGL-test");
-	document.getElementById("mirror").checked=false;
+	document.getElementById("mirrorSwitch").checked=true;
 
 	canvas.onmousedown = handleMouseDown;
 	document.onmouseup = handleMouseUp;
@@ -469,6 +469,7 @@ function webGLStart() {
 
 // =====================================================
 function drawScene() {
+	console.log("drawScene");
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	//PLANE.draw();
 	CUBE.draw();
@@ -476,10 +477,11 @@ function drawScene() {
 	//OBJ2.draw();
 }
 
-// function setMirror() {
-// 		this.mirror = !this.mirror;
-// 		console.log("Mirror : "+this.mirror);
-// }
+function setMirror() {
+		this.isMir = !this.isMir;
+		OBJ1.isMirror = this.isMir;
+		console.log("Mirror : "+this.isMir);
+}
 
 // var slider = document.getElementById("myRange");
 // var output = document.getElementById("demo");
