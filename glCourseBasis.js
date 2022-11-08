@@ -8,7 +8,7 @@ var pMatrix = mat4.create();
 var rotMatrix = mat4.create();
 var distCENTER;
 var textureCube;
-var isMirror = true;
+var isMir = true;
 // =====================================================
 
 var OBJ1 = null;
@@ -31,6 +31,7 @@ class objmesh {
 		this.loaded = -1;
 		this.shader = null;
 		this.mesh = null;
+		this.isMirror = isMir
 		
 		loadObjFile(this);
 		loadShaders(this);
@@ -52,8 +53,8 @@ class objmesh {
 
 		gl.bindTexture(gl.TEXTURE_CUBE_MAP, textureCube);
 
-		this.shader.uSkyboxUniform = gl.getUniformLocation(this.shader, "uSkybox")
-		gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
+		this.shader.uSkyboxUniform = gl.getUniformLocation(this.shader, "uSkybox");
+		gl.bindTexture(gl.TEXTURE_CUBE_MAP, textureCube);
 		gl.uniform1i(this.shader.uSkyboxUniform, 0);
 
 		this.shader.rMatrixUniform = gl.getUniformLocation(this.shader, "uRMatrix");
@@ -472,17 +473,17 @@ function drawScene() {
 	//OBJ2.draw();
 }
 
-function setMirror() {
-		this.mirror = !this.mirror;
-		console.log("Mirror : "+this.mirror);
-}
+// function setMirror() {
+// 		this.mirror = !this.mirror;
+// 		console.log("Mirror : "+this.mirror);
+// }
 
-var slider = document.getElementById("myRange");
-var output = document.getElementById("demo");
-output.innerHTML = slider.value; // Display the default slider value
+// var slider = document.getElementById("myRange");
+// var output = document.getElementById("demo");
+// output.innerHTML = slider.value; // Display the default slider value
 
-// Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
-  output.innerHTML = this.value;
-  console.log(output.innerHTML);
-}
+// // Update the current slider value (each time you drag the slider handle)
+// slider.oninput = function() {
+//   output.innerHTML = this.value;
+//   console.log(output.innerHTML);
+// }
