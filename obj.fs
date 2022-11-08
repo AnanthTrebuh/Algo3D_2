@@ -5,7 +5,7 @@ precision mediump float;
 varying vec4 pos3D;
 varying vec3 N;
 
-varying vec4 rMat;
+varying mat4 rMat;
 
 uniform bool uIsMirror;
 uniform vec3 uCameraPos;

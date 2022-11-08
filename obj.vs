@@ -6,10 +6,10 @@ uniform bool uIsMirror;
 uniform mat4 uRMatrix;
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
+varying mat4 rMat;
 
 varying vec4 pos3D;
 varying vec3 N;
-varying vec4 rMat;
 
 //mirror obj
 varying vec3 vPosMirror;
@@ -26,7 +26,7 @@ void main(void)
 	pos3D = uMVMatrix * vec4(aVertexPosition,1.0);
 	N = vec3(uRMatrix * vec4(aVertexNormal,1.0));
 	gl_Position = uPMatrix * pos3D;
-	rMat = vec4(transpose(uRMatrix));
+	rMat = transpose(uRMatrix);
 
 	// N = mat3(transpose(inverse(uMVMatrix))) * aVertexNormal;
 	// vPos = vec3(model * vec4(aVertexPosition, 1.0));
