@@ -31,7 +31,8 @@ class objmesh {
 		this.loaded = -1;
 		this.shader = null;
 		this.mesh = null;
-		this.isMirror = isMir
+		this.isMirror = false;
+		this.isRefrac = true;
 		
 		loadObjFile(this);
 		loadShaders(this);
@@ -61,7 +62,8 @@ class objmesh {
 		this.shader.mvMatrixUniform = gl.getUniformLocation(this.shader, "uMVMatrix");
 		this.shader.pMatrixUniform = gl.getUniformLocation(this.shader, "uPMatrix");
 
-		this.shader.isMirrorUniform = gl.getUniformLocation(this.shader, "uIsMirror")
+		this.shader.isMirrorUniform = gl.getUniformLocation(this.shader, "uIsMirror");
+		this.shader.isRefracUniform = gl.getUniformLocation(this.shader, "uIsRefrac");
 	}
 	
 	// --------------------------------------------
@@ -73,6 +75,7 @@ class objmesh {
 		gl.uniformMatrix4fv(this.shader.mvMatrixUniform, false, mvMatrix);
 		gl.uniformMatrix4fv(this.shader.pMatrixUniform, false, pMatrix);
 		gl.uniform1i(this.shader.isMirrorUniform, this.isMirror);
+		gl.uniform1i(this.shader.isRefracUniform, this.isRefrac);
 	}
 	
 	// --------------------------------------------
@@ -458,7 +461,7 @@ function webGLStart() {
 	
 	PLANE = new plane();
 	CUBE = new cube();
-	OBJ1 = new objmesh('sphere.obj');
+	OBJ1 = new objmesh('cube.obj');
 	//OBJ2 = new objmesh('porsche.obj');
 	
 	tick();
