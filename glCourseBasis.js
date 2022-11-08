@@ -17,6 +17,7 @@ var PLANE = null;
 var CUBE = null;
 
 var objet = "sphere";
+var sliderValue = null;
 
 
 // =====================================================
@@ -65,6 +66,7 @@ class objmesh {
 
 		this.shader.isMirrorUniform = gl.getUniformLocation(this.shader, "uIsMirror");
 		this.shader.isRefracUniform = gl.getUniformLocation(this.shader, "uIsRefrac");
+		this.shader.refractValue = gl.getUniformLocation(this.shader, "uRefracValue");
 	}
 	
 	// --------------------------------------------
@@ -494,18 +496,13 @@ function setRefrac() {
 		OBJ1.isMirror = this.isMir;
 		document.getElementById("mirrorSwitch").checked=false;
 		this.isRefrac = !this.isRefrac;
-		OBJ1.isRefrac = this.isRefrac;
-		
+		OBJ1.isRefrac = this.isRefrac;		
 		console.log("Refrac : "+this.isRefrac);
 }
 
-var slider = document.getElementById("myRange");
-var output = document.getElementById("demo");
-var sliderValue = slider.value;
-output.innerHTML = slider.value; // Display the default slider value
-
-// Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
- sliderValue = slider.value;
-  console.log(sliderValue);
+function getSliderval() {
+		sliderValue =  document.getElementById("slider").value/100;
+		console.log("sliderValue : "+sliderValue);
 }
+var slider = document.getElementById("myRange");
+
