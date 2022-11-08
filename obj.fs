@@ -22,7 +22,7 @@ void main(void)
 	}
 	else if (uIsRefrac)
 	{
-		float ratio = 1.00 / 1.00;
+		float ratio = 0.7;
 		vec3 I = normalize(pos3D).xyz;
 		vec3 R = refract(I, normalize(N), ratio);
 		R = vec3(rMat * vec4(R, 1.0));

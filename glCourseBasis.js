@@ -8,7 +8,8 @@ var pMatrix = mat4.create();
 var rotMatrix = mat4.create();
 var distCENTER;
 var textureCube;
-var isMir = true;
+var isMir = false;
+var isRefrac = false;
 // =====================================================
 
 var OBJ1 = null;
@@ -31,8 +32,8 @@ class objmesh {
 		this.loaded = -1;
 		this.shader = null;
 		this.mesh = null;
-		this.isMirror = false;
-		this.isRefrac = true;
+		this.isMirror = this.isMir;
+		this.isRefrac = this.isRefrac;
 		
 		loadObjFile(this);
 		loadShaders(this);
@@ -443,7 +444,8 @@ function compileShaders(Obj3D)
 function webGLStart() {
 	
 	var canvas = document.getElementById("WebGL-test");
-	document.getElementById("mirrorSwitch").checked=true;
+	document.getElementById("mirrorSwitch").checked=false;
+	document.getElementById("refractSwitch").checked=false;
 
 	canvas.onmousedown = handleMouseDown;
 	document.onmouseup = handleMouseUp;
@@ -461,7 +463,7 @@ function webGLStart() {
 	
 	PLANE = new plane();
 	CUBE = new cube();
-	OBJ1 = new objmesh('cube.obj');
+	OBJ1 = new objmesh('sphere.obj');
 	//OBJ2 = new objmesh('porsche.obj');
 	
 	tick();
@@ -478,17 +480,32 @@ function drawScene() {
 }
 
 function setMirror() {
+	    this.isRefrac =false;
+		OBJ1.isRefrac = this.isRefrac;
+		document.getElementById("refractSwitch").checked=false;
+
 		this.isMir = !this.isMir;
 		OBJ1.isMirror = this.isMir;
 		console.log("Mirror : "+this.isMir);
 }
 
-// var slider = document.getElementById("myRange");
-// var output = document.getElementById("demo");
-// output.innerHTML = slider.value; // Display the default slider value
+function setRefrac() {
+		this.isMir = false;
+		OBJ1.isMirror = this.isMir;
+		document.getElementById("mirrorSwitch").checked=false;
+		this.isRefrac = !this.isRefrac;
+		OBJ1.isRefrac = this.isRefrac;
+		
+		console.log("Refrac : "+this.isRefrac);
+}
 
-// // Update the current slider value (each time you drag the slider handle)
-// slider.oninput = function() {
-//   output.innerHTML = this.value;
-//   console.log(output.innerHTML);
-// }
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+var sliderValue = slider.value;
+output.innerHTML = slider.value; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+ sliderValue = slider.value;
+  console.log(sliderValue);
+}
