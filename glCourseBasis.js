@@ -8,7 +8,7 @@ var pMatrix = mat4.create();
 var rotMatrix = mat4.create();
 var distCENTER;
 var textureCube;
-var isMir = false;
+var isMir = true;
 // =====================================================
 
 var OBJ1 = null;
@@ -440,7 +440,7 @@ function compileShaders(Obj3D)
 function webGLStart() {
 	
 	var canvas = document.getElementById("WebGL-test");
-	document.getElementById("mirrorSwitch").checked=false;
+	document.getElementById("mirrorSwitch").checked=true;
 
 	canvas.onmousedown = handleMouseDown;
 	document.onmouseup = handleMouseUp;
