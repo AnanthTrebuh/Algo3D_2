@@ -15,7 +15,13 @@ uniform float uRefracValue;
 void main(void)
 {
 
-	float ratio = uRefracValue;
+	//i reflect
+	//m normal
+	//n indice
+	// R 
+	// T = 1 - R
+
+	float ratio = 1.0/ uRefracValue;
 	vec3 I = normalize(pos3D.xyz);
 	vec3 Re = reflect(I, normalize(N));
 	Re = (rMat * vec4(Re, 1.0)).xyz;
@@ -23,9 +29,17 @@ void main(void)
 	vec3 Ra = refract(I, normalize(N), ratio);
 	Ra = (rMat * vec4(Ra, 1.0)).xyz;
 	vec4 textRa = vec4(textureCube(uSkybox, normalize(Ra.xzy)).rgb, 1.0);
-	vec3 R = Re + Ra;
+	// vec3 R = Re + Ra;
+
+	float c = abs(dot(normalize(Ra), normalize(N)));
+	float g = sqrt((uRefracValue*uRefracValue) + ( c*c) - 1.0);
+    float R = 0.5 * (((g-c)*(g-c))/((g+c)*(g+c))) * ( 1.0 + ((c * (g+c)-1.0) * (c * (g+c)-1.0)) / ((c * (g-c)+1.0) * (c * (g-c)+1.0) ));
+	float T = 1.0 - R;
+
 	if(uIsMirror && uIsRefrac){
-		gl_FragColor = textRa + textRe;
+		textRa = textRa * R;
+		textRe = textRe * T;
+		gl_FragColor = textRa  + textRe;
 	}
 	else if (uIsMirror){
 		gl_FragColor = textRe;

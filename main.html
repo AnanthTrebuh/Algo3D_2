@@ -31,7 +31,16 @@
 				</div>
 				<div class="slidecontainer">
 					<label for="slider" class="form-label">Réfraction</label>
-					<input type="range" min="1" max="100" value="50" class="slider" step="1" id="slider" oninput="getSliderVal()">
+					<input type="range" min="1.0" max="6.0" value="1.0" class="slider" step="0.01" id="slider" oninput="getSliderVal()">
+				</div>
+				<div>
+					<select name="obj" id="obj" onchange="changeObj(this.value)">
+						<option value="porsche">Porsche</option>
+						<option value="bunny">Bunny</option>
+						<option value="cube">Cube</option>
+						<option value="sphere" selected="selected">Sphere</option>
+						<option value="mustang">Mustang</option>
+					  </select>
 				</div>
 			</div>
 		</td>

@@ -17,7 +17,7 @@ var PLANE = null;
 var CUBE = null;
 
 var objet = "sphere.obj";
-var sliderValue = 0.5;
+var sliderValue = 1.0;
 
 
 // =====================================================
@@ -521,17 +521,13 @@ function changeImage(numImage) {
 }
 
 function getSliderVal() {
-	sliderValue =  document.getElementById("slider").value/100;
+	sliderValue =  document.getElementById("slider").value;
 	console.log("sliderValue : "+sliderValue);
 }
-var slider = document.getElementById("myRange");
 
-var output = document.getElementById("demo");
-// var sliderValue = slider.value;
-// output.innerHTML = slider.value; // Display the default slider value
-
-// Update the current slider value (each time you drag the slider handle)
-// slider.oninput = function() {
-//  	sliderValue = slider.value;
-// 	console.log(sliderValue);
-// }
+function changeObj(object){
+	objet = ''+object+'.obj';
+	OBJ1 = new objmesh(objet);
+	OBJ1.draw();
+	console.log(objet)
+}
