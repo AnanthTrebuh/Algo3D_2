@@ -16,7 +16,8 @@ var OBJ1 = null;
 var PLANE = null;
 var CUBE = null;
 
-var objet = "bunny.obj";
+var objet = "sphere.obj";
+var sliderValue = 0.5;
 
 
 // =====================================================
@@ -65,6 +66,7 @@ class objmesh {
 
 		this.shader.isMirrorUniform = gl.getUniformLocation(this.shader, "uIsMirror");
 		this.shader.isRefracUniform = gl.getUniformLocation(this.shader, "uIsRefrac");
+		this.shader.refractValue = gl.getUniformLocation(this.shader, "uRefracValue");
 	}
 	
 	// --------------------------------------------
@@ -77,6 +79,7 @@ class objmesh {
 		gl.uniformMatrix4fv(this.shader.pMatrixUniform, false, pMatrix);
 		gl.uniform1i(this.shader.isMirrorUniform, this.isMirror);
 		gl.uniform1i(this.shader.isRefracUniform, this.isRefrac);
+		gl.uniform1f(this.shader.refractValue, sliderValue);
 	}
 	
 	// --------------------------------------------
@@ -516,7 +519,12 @@ function changeImage(numImage) {
 	textureCube = textures[numImage];
 }
 
+function getSliderVal() {
+	sliderValue =  document.getElementById("slider").value/100;
+	console.log("sliderValue : "+sliderValue);
+}
 var slider = document.getElementById("myRange");
+
 var output = document.getElementById("demo");
 // var sliderValue = slider.value;
 // output.innerHTML = slider.value; // Display the default slider value

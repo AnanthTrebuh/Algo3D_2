@@ -10,7 +10,7 @@ varying mat4 rMat;
 uniform bool uIsMirror;
 uniform bool uIsRefrac;
 uniform samplerCube uSkybox;
-
+uniform float uRefracValue;
 // ==============================================
 void main(void)
 {
