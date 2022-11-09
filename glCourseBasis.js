@@ -8,7 +8,7 @@ var pMatrix = mat4.create();
 var rotMatrix = mat4.create();
 var distCENTER;
 var textureCube;
-var isMir = false;
+var isMirror = false;
 var isRefrac = false;
 // =====================================================
 
@@ -16,7 +16,7 @@ var OBJ1 = null;
 var PLANE = null;
 var CUBE = null;
 
-var objet = "sphere";
+var objet = "bunny.obj";
 
 
 // =====================================================
@@ -32,7 +32,7 @@ class objmesh {
 		this.loaded = -1;
 		this.shader = null;
 		this.mesh = null;
-		this.isMirror = this.isMir;
+		this.isMirror = this.isMirror;
 		this.isRefrac = this.isRefrac;
 		
 		loadObjFile(this);
@@ -129,62 +129,6 @@ class cube {
 		]
 
 		// Create a texture.
-	  
-		const faceInfos = [
-		  {
-			target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-			url: './skybox/right.jpg',
-		  },
-		  {
-			target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-			url: './skybox/left.jpg',
-		  },
-		  {
-			target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-			url: './skybox/top.jpg',
-		  },
-		  {
-			target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-			url: './skybox/bottom.jpg',
-		  },
-		  {
-			target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-			url: './skybox/front.jpg',
-		  },
-		  {
-			target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-			url: './skybox/back.jpg',
-		  },
-		];
-
-		this.texture = gl.createTexture();
-		gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
-
-		faceInfos.forEach((faceInfo) => {
-		  const {target, url} = faceInfo;
-	  
-		  // Upload the canvas to the cubemap face.
-		  const level = 0;
-		  const internalFormat = gl.RGBA;
-		  const width = 512;
-		  const height = 512;
-		  const format = gl.RGBA;
-		  const type = gl.UNSIGNED_BYTE;
-	  
-		  // setup each face so it's immediately renderable
-		  gl.texImage2D(target, level, internalFormat, width, height, 0, format, type, null);
-	  
-		  // Asynchronously load an image
-		  const image = new Image();
-		  image.src = url;
-		  image.onload= () => {
-			// Now that the image has loaded make copy it to the texture.
-			gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
-			gl.texImage2D(target, level, internalFormat, format, type, image);
-			gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
-		  }
-		})
-		textureCube = this.texture;
 		gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
 		gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
 
@@ -217,7 +161,7 @@ class cube {
 
 		this.shader.uSkyboxUniform = gl.getUniformLocation(this.shader, "uSkybox")
 		//gl.activeTexture(gl.TEXTURE_CUBE_MAP); // genere des warnings
-		gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.texture);
+		gl.bindTexture(gl.TEXTURE_CUBE_MAP, textureCube);
 		gl.uniform1i(this.shader.uSkyboxUniform, 0);
 
 		this.shader.pMatrixUniform = gl.getUniformLocation(this.shader, "uPMatrix")
@@ -439,6 +383,66 @@ function compileShaders(Obj3D)
 	}
 }
 
+function loadTextures(path) {
+    const faces = [
+        {
+            target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+            url: path + "right.jpg",
+        },
+        {
+            target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+            url: path + "left.jpg",
+        },
+        {
+            target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+            url: path + "top.jpg",
+        },
+        {
+            target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+            url: path + "bottom.jpg",
+        },
+        {
+            target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
+            url: path + "front.jpg",
+        },
+        {
+            target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
+            url: path + "back.jpg",
+        },
+    ]
+
+    var CurrtextureCube = gl.createTexture()
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, CurrtextureCube)
+	faces.forEach((face) => {
+        const { target, url } = face
+
+        // Upload the canvas to the cubemap face.
+        const level = 0
+        const internalFormat = gl.RGBA
+        const width = 512
+        const height = 512
+        const format = gl.RGBA
+        const type = gl.UNSIGNED_BYTE
+
+        // setup each face so it's immediately renderable
+        gl.texImage2D(target, level, internalFormat, width, height, 0, format, type, null)
+
+        // Asynchronously load an image
+        const image = new Image()
+        image.src = url
+        image.onload = () => {
+            // Now that the image has loaded upload it to the texture.
+            gl.bindTexture(gl.TEXTURE_CUBE_MAP, CurrtextureCube)
+            // gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            // gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            // gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            // gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.texImage2D(target, level, internalFormat, format, type, image)
+            gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
+        }
+    })
+    return CurrtextureCube
+}
 
 // =====================================================
 function webGLStart() {
@@ -454,6 +458,14 @@ function webGLStart() {
 
 	initGL(canvas);
 
+	textures = {
+        Water: loadTextures("./skybox/Water/"),
+        Space: loadTextures("./skybox/Space/"),
+        RedSpace: loadTextures("./skybox/RedSpace/"),
+    }
+    textureCube = textures.Water
+	gl.bindTexture(gl.TEXTURE_CUBE_MAP, textureCube);
+
 	mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 	mat4.identity(rotMatrix);
 	mat4.rotate(rotMatrix, rotX, [1, 0, 0]);
@@ -463,7 +475,7 @@ function webGLStart() {
 	
 	PLANE = new plane();
 	CUBE = new cube();
-	OBJ1 = new objmesh('sphere.obj');
+	OBJ1 = new objmesh(objet);
 	//OBJ2 = new objmesh('porsche.obj');
 	
 	tick();
@@ -480,32 +492,37 @@ function drawScene() {
 }
 
 function setMirror() {
-	    this.isRefrac =false;
-		OBJ1.isRefrac = this.isRefrac;
-		document.getElementById("refractSwitch").checked=false;
+	    // this.isRefrac =false;
+		OBJ1.isMirror = !OBJ1.isMirror;
+		// document.getElementById("refractSwitch").checked=false;
 
-		this.isMir = !this.isMir;
-		OBJ1.isMirror = this.isMir;
+		// this.isMir = !this.isMir;
+		// OBJ1.isMirror = this.isMir;
 		console.log("Mirror : "+this.isMir);
 }
 
 function setRefrac() {
-		this.isMir = false;
-		OBJ1.isMirror = this.isMir;
-		document.getElementById("mirrorSwitch").checked=false;
-		this.isRefrac = !this.isRefrac;
-		OBJ1.isRefrac = this.isRefrac;
+		// this.isMir = false;
+		OBJ1.isRefrac = !OBJ1.isRefrac;
+		// document.getElementById("mirrorSwitch").checked=false;
+		// this.isRefrac = !this.isRefrac;
+		// OBJ1.isRefrac = this.isRefrac;
 		
 		console.log("Refrac : "+this.isRefrac);
 }
 
+function changeImage(numImage) {
+	console.log(numImage)
+	textureCube = textures[numImage];
+}
+
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
-var sliderValue = slider.value;
-output.innerHTML = slider.value; // Display the default slider value
+// var sliderValue = slider.value;
+// output.innerHTML = slider.value; // Display the default slider value
 
 // Update the current slider value (each time you drag the slider handle)
-slider.oninput = function() {
- sliderValue = slider.value;
-  console.log(sliderValue);
-}
+// slider.oninput = function() {
+//  	sliderValue = slider.value;
+// 	console.log(sliderValue);
+// }
