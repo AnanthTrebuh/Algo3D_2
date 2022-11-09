@@ -465,6 +465,7 @@ function webGLStart() {
         Water: loadTextures("./skybox/Water/"),
         Space: loadTextures("./skybox/Space/"),
         RedSpace: loadTextures("./skybox/RedSpace/"),
+		Mountain: loadTextures("./skybox/Mountain/"),
     }
     textureCube = textures.Water
 	gl.bindTexture(gl.TEXTURE_CUBE_MAP, textureCube);

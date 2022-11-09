@@ -15,7 +15,7 @@ uniform float uRefracValue;
 void main(void)
 {
 
-	float ratio = 1.0 / 1.0;
+	float ratio = uRefracValue;
 	vec3 I = normalize(pos3D.xyz);
 	vec3 Re = reflect(I, normalize(N));
 	Re = (rMat * vec4(Re, 1.0)).xyz;
