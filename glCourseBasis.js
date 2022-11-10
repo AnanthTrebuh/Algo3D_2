@@ -33,8 +33,8 @@ class objmesh {
 		this.loaded = -1;
 		this.shader = null;
 		this.mesh = null;
-		this.isMirror = this.isMirror;
-		this.isRefrac = this.isRefrac;
+		this.isMirror = isMirror;
+		this.isRefrac = isRefrac;
 		
 		loadObjFile(this);
 		loadShaders(this);
@@ -328,8 +328,6 @@ loadObjFile = function(OBJ3D)
 	xhttp.send();
 }
 
-
-
 // =====================================================
 function loadShaders(Obj3D) {
 	loadShaderText(Obj3D,'.vs');
@@ -496,23 +494,15 @@ function drawScene() {
 }
 
 function setMirror() {
-	    // this.isRefrac =false;
-		OBJ1.isMirror = !OBJ1.isMirror;
-		// document.getElementById("refractSwitch").checked=false;
-
-		// this.isMir = !this.isMir;
-		// OBJ1.isMirror = this.isMir;
-		console.log("Mirror : "+this.isMir);
+	isMirror = !isMirror;
+	OBJ1.isMirror = !OBJ1.isMirror;
+	console.log("Mirror : "+this.isMir);
 }
 
 function setRefrac() {
-		// this.isMir = false;
-		OBJ1.isRefrac = !OBJ1.isRefrac;
-		// document.getElementById("mirrorSwitch").checked=false;
-		// this.isRefrac = !this.isRefrac;
-		// OBJ1.isRefrac = this.isRefrac;
-		
-		console.log("Refrac : "+this.isRefrac);
+	isRefrac = !isRefrac;
+	OBJ1.isRefrac = !OBJ1.isRefrac;
+	console.log("Refrac : "+this.isRefrac);
 }
 
 function changeImage(numImage) {

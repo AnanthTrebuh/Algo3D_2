@@ -31,7 +31,7 @@ void main(void)
 	vec4 textRa = vec4(textureCube(uSkybox, normalize(Ra.xzy)).rgb, 1.0);
 	// vec3 R = Re + Ra;
 
-	float c = abs(dot(normalize(Ra), normalize(N)));
+	float c = abs(dot(Ra, normalize(N)));
 	float g = sqrt((uRefracValue*uRefracValue) + ( c*c) - 1.0);
     float R = 0.5 * (((g-c)*(g-c))/((g+c)*(g+c))) * ( 1.0 + ((c * (g+c)-1.0) * (c * (g+c)-1.0)) / ((c * (g-c)+1.0) * (c * (g-c)+1.0) ));
 	float T = 1.0 - R;
