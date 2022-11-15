@@ -33,27 +33,27 @@
 					<label for="slider" class="form-label">Réfraction</label>
 					<input type="range" min="1.0" max="6.0" value="1.0" class="slider" step="0.01" id="slider" oninput="getSliderVal()">
 				</div>
+				
 				<div>
-					<select name="obj" id="obj" onchange="changeObj(this.value)">
-						<option value="porsche">Porsche</option>
+					<img src="./skybox/Water/right.jpg" class="rounded float-start" alt="Water" width="200" height="240" onclick="changeImage(this.id)" id="Water"/>
+					<img src="./skybox/Space/right.jpg" class="rounded float-end"alt="Space" width="200" height="240" onclick="changeImage(this.id)" id="Space"/>
+				</div>
+				<div>	
+					<img src="./skybox/RedSpace/right.jpg" class="rounded float-start" alt="RedSpace"width="200" height="240" onclick="changeImage(this.id)" id="RedSpace"/>
+					<img src="./skybox/Mountain/right.jpg" class="rounded float-end"alt="Mountain" width="200" height="240" onclick="changeImage(this.id)" id="Mountain"/>
+					
+				</div>
+				<div>
+					<select class="form-select" name="obj" id="obj" onchange="changeObj(this.value)">
 						<option value="bunny">Bunny</option>
 						<option value="cube">Cube</option>
-						<option value="sphere" selected="selected">Sphere</option>
 						<option value="mustang">Mustang</option>
+						<option value="porsche">Porsche</option>
+						<option value="sphere" selected="selected">Sphere</option>
 					  </select>
 				</div>
 			</div>
-		</td>
-		<td>
-			<div>
-				<img src="./skybox/Water/right.jpg" width="200" height="240" onclick="changeImage(this.id)" id="Water"/>
-				<img src="./skybox/Space/right.jpg" width="200" height="240" onclick="changeImage(this.id)" id="Space"/>
-			</div>
-			<div>	
-				<img src="./skybox/RedSpace/right.jpg" width="200" height="240" onclick="changeImage(this.id)" id="RedSpace"/>
-				<img src="./skybox/Mountain/right.jpg" width="200" height="240" onclick="changeImage(this.id)" id="Mountain"/>
-				
-			</div>
+			
 		</td>
 	</table>
 	<br><br>
