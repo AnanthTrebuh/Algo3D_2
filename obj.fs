@@ -12,36 +12,43 @@ uniform bool uIsRefrac;
 uniform samplerCube uSkybox;
 uniform float uRefracValue;
 // ==============================================
+
+vec4 refraction(vec3 I, vec3 N, float ratio){
+	vec3 Refraction = refract(I, N, ratio);
+	Refraction = (rMat * vec4(Refraction, 1.0)).xyz;
+	return textureCube(uSkybox, Refraction.xzy);
+}
+
+vec4 reflection(vec3 I, vec3 N){
+	vec3 Reflection = reflect(I, N);
+	Reflection = (rMat * vec4(Reflection, 1.0)).xyz;
+	return textureCube(uSkybox, Reflection.xzy);
+}
+
 void main(void)
 {
 	float ratio = 1.0/ uRefracValue;
 	vec3 I = normalize(pos3D.xyz);
-	vec3 Reflection = reflect(I, normalize(N));
-	Reflection = (rMat * vec4(Reflection, 1.0)).xyz;
-	vec4 textRe = vec4(0,0,0,0);
-	textRe = textureCube(uSkybox, Reflection.xzy);
-	vec3 Refraction = refract(I, normalize(N), ratio);
-	Refraction = (rMat * vec4(Refraction, 1.0)).xyz;
-	vec4 textRa = vec4(0,0,0,0);
-	textRa = textureCube(uSkybox, Refraction.xzy);
+	vec3 Normal = normalize(N);
 
-	float c = abs(dot(I, normalize(N)));
-	float g = sqrt((uRefracValue*uRefracValue) + ( c*c) - 1.0);
-    float R = 0.5 * 
-			(((g-c)*(g-c))/((g+c)*(g+c))) * 
-			( 1.0 + (((c * (g+c)-1.0) * (c * (g+c)-1.0)) / ((c * (g-c)+1.0) * (c * (g-c)+1.0) )));
-	float T = 1.0 - R;
+	vec4 textRefrac = uIsRefrac ? refraction(I, N, ratio) : vec4(0,0,0,0);
+	vec4 textMirror = uIsMirror ? reflection(I, N) : vec4(0,0,0,0);
 
 	if(uIsMirror && uIsRefrac){
-		textRa = textRa * R;
-		textRe = textRe * T;
-		gl_FragColor = textRa  + textRe;    
+		float c = abs(dot(I, normalize(N)));
+		float g = sqrt((uRefracValue*uRefracValue) + ( c*c) - 1.0);
+		float R = 0.5 * 
+				(((g-c)*(g-c))/((g+c)*(g+c))) * 
+				( 1.0 + (((c * (g+c)-1.0) * (c * (g+c)-1.0)) / ((c * (g-c)+1.0) * (c * (g-c)+1.0) )));
+		float T = 1.0 - R;
+
+		gl_FragColor = ((textRefrac * R) + (textMirror * T));    
 	}
 	else if (uIsMirror){
-		gl_FragColor = textRe;
+		gl_FragColor = textMirror;
 	}
 	else if (uIsRefrac){
-		gl_FragColor = textRa;
+		gl_FragColor = textRefrac;
 	}
 	else {
 		vec3 col = vec3(0.0,0.6,0.4) * dot(N,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
