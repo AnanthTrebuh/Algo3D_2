@@ -10,6 +10,7 @@ var distCENTER;
 var textureCube;
 var isMirror = false;
 var isRefrac = false;
+var isCookTor = true;
 // =====================================================
 
 var OBJ1 = null;
@@ -35,6 +36,7 @@ class objmesh {
 		this.mesh = null;
 		this.isMirror = isMirror;
 		this.isRefrac = isRefrac;
+		this.isCookTor = isCookTor;
 		
 		loadObjFile(this);
 		loadShaders(this);
@@ -67,6 +69,8 @@ class objmesh {
 		this.shader.isMirrorUniform = gl.getUniformLocation(this.shader, "uIsMirror");
 		this.shader.isRefracUniform = gl.getUniformLocation(this.shader, "uIsRefrac");
 		this.shader.refractValue = gl.getUniformLocation(this.shader, "uRefracValue");
+		this.shader.isCookTor = gl.getUniformLocation(this.shader, "uIsCookTor");
+
 	}
 	
 	// --------------------------------------------
@@ -80,6 +84,8 @@ class objmesh {
 		gl.uniform1i(this.shader.isMirrorUniform, this.isMirror);
 		gl.uniform1i(this.shader.isRefracUniform, this.isRefrac);
 		gl.uniform1f(this.shader.refractValue, sliderValue);
+		gl.uniform1i(this.shader.isCookTor, this.isCookTor);
+
 	}
 	
 	// --------------------------------------------
