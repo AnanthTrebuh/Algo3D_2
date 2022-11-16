@@ -33,7 +33,7 @@ vec3 cookTorrance(vec3 I, vec3 N, vec3 V, vec3 L, vec3 Kd, vec3 Ks, float roughn
 	//calculate the geometric term
 	float G = min(1.0, min((2.0 * NdotH * NdotV) / VdotH, (2.0 * NdotH * NdotL) / VdotH));
 	//calculate the roughness term
-	float D = (roughness * roughness) / (3.14159265359 * pow((NdotH * NdotH * (roughness * roughness - 1.0) + 1.0), 2.0));
+	float D = (roughness * roughness) / (3.14159265359 * (((NdotH * NdotH * (roughness * roughness - 1.0) + 1.0), 2.0)*((NdotH * NdotH * (roughness * roughness - 1.0) + 1.0), 2.0)));
 	//calculate the diffuse term
 	vec3 diffuse = (1.0 - F) * (1.0 - metallic) * Kd / 3.14159265359;
 	//calculate the specular term
