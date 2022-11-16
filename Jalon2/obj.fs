@@ -89,7 +89,7 @@ vec3 cookTorranceBeckmann(vec3 I, vec3 N, vec3 V, vec3 L, vec3 Kd, vec3 Ks, floa
 	return color;
 }
 
-float fresnel(I, N, uRefracValue){
+float fresnel(vec3 I, vec3 N, float uRefracValue){
 		float c = abs(dot(I, normalize(N)));
 		float g = sqrt((uRefracValue*uRefracValue) + ( c*c) - 1.0);
 		float R = 0.5 * 
@@ -98,8 +98,6 @@ float fresnel(I, N, uRefracValue){
 		return R;
 }
 
-		return R;
-}
 void main(void)
 {
 	float ratio = 1.0/ uRefracValue;
