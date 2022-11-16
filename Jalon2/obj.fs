@@ -59,7 +59,15 @@ vec3 cookTorrance(vec3 I, vec3 N, vec3 V, vec3 L, vec3 Kd, vec3 Ks, float roughn
 // 	vec3 color = (diffuse + specular) * L * NdotL;
 // 	return color;
 // }
+float fresnel(I, N, uRefracValue){
+		float c = abs(dot(I, normalize(N)));
+		float g = sqrt((uRefracValue*uRefracValue) + ( c*c) - 1.0);
+		float R = 0.5 * 
+				(((g-c)*(g-c))/((g+c)*(g+c))) * 
+				( 1.0 + (((c * (g+c)-1.0) * (c * (g+c)-1.0)) / ((c * (g-c)+1.0) * (c * (g-c)+1.0) )));
 
+		return R;
+}
 void main(void)
 {
 	float ratio = 1.0/ uRefracValue;
@@ -70,11 +78,7 @@ void main(void)
 	vec4 textMirror = uIsMirror ? reflection(I, N) : vec4(0,0,0,0);
 
 	if(uIsMirror && uIsRefrac){
-		float c = abs(dot(I, normalize(N)));
-		float g = sqrt((uRefracValue*uRefracValue) + ( c*c) - 1.0);
-		float R = 0.5 * 
-				(((g-c)*(g-c))/((g+c)*(g+c))) * 
-				( 1.0 + (((c * (g+c)-1.0) * (c * (g+c)-1.0)) / ((c * (g-c)+1.0) * (c * (g-c)+1.0) )));
+		float R = fresnel(I, N, uRefracValue);
 		float T = 1.0 - R;
 
 		gl_FragColor = ((textRefrac * R) + (textMirror * T));    
