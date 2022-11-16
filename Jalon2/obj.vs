@@ -27,8 +27,4 @@ void main(void)
 	N = vec3(uRMatrix * vec4(aVertexNormal,1.0));
 	gl_Position = uPMatrix * pos3D;
 	rMat = transpose(uRMatrix);
-
-	// N = mat3(transpose(inverse(uMVMatrix))) * aVertexNormal;
-	// vPos = vec3(model * vec4(aVertexPosition, 1.0));
-	// gl_Position = uPMatrix * uMVMatrix * vec4(vPos,1.0);
 }
