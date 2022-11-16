@@ -19,6 +19,7 @@ var CUBE = null;
 
 var objet = "sphere.obj";
 var sliderValue = 1.0;
+var sigmaValue = 0.01;
 
 
 // =====================================================
@@ -521,6 +522,10 @@ function getSliderVal() {
 	console.log("sliderValue : "+sliderValue);
 }
 
+function getSigmaVal(){
+	sigmaValue = document.getElementById("sigma").value;
+	console.log("SigmaValue : " +sigmaValue);
+}
 function changeObj(object){
 	objet = ''+object+'.obj';
 	OBJ1 = new objmesh(objet);
