@@ -86,7 +86,6 @@ void main(void)
 		vec3 i = normalize(lightSource - pos3D.xyz);
 		vec3 o = normalize(-pos3D.xyz);
 		vec3 M = normalize(i + o);
-		// vec3 M = (i + o) / abs(i + o);
 
 		float cosT = dot(normalize(N),normalize(M));
 		float pi = 3.14159265359;
