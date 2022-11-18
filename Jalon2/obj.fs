@@ -13,6 +13,7 @@ uniform samplerCube uSkybox;
 uniform float uRefracValue;
 uniform float uSigmaValue;
 uniform bool uIsCookTor;
+uniform vec3 uLightSource;
 
 // ==============================================
 
@@ -80,7 +81,8 @@ void main(void)
 		gl_FragColor = textRefrac;
 	}
 	else if(uIsCookTor){
-		vec3 lightSource = vec3(0.0, 0.0, 0.0);
+		vec3 lightSource = uLightSource;
+
 		vec3 Kd = vec3(0.8);
 		vec3 Ks = vec3(1.0);
 		vec3 i = normalize(lightSource - pos3D.xyz);

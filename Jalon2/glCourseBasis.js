@@ -20,6 +20,7 @@ var CUBE = null;
 var objet = "bunny.obj";
 var sliderValue = 1.0;
 var sigmaValue = 0.01;
+var lightSource = [0.0, 0.0, 0.0];
 
 
 // =====================================================
@@ -73,6 +74,8 @@ class objmesh {
 		this.shader.refractValue = gl.getUniformLocation(this.shader, "uRefracValue");
 		this.shader.sigmaValue = gl.getUniformLocation(this.shader, "uSigmaValue");
 
+		this.shader.lightSource = gl.getUniformLocation(this.shader, "uLightSource");
+
 
 	}
 	
@@ -89,6 +92,7 @@ class objmesh {
 		gl.uniform1i(this.shader.isCookTor, this.isCookTor);
 		gl.uniform1f(this.shader.refractValue, sliderValue);
 		gl.uniform1f(this.shader.sigmaValue, sigmaValue);
+		gl.uniform3fv(this.shader.lightSource, lightSource);
 
 	}
 	

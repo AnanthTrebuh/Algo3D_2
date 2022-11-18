@@ -68,7 +68,10 @@ function handleMouseMove(event) {
 	
 	if(event.shiftKey) {
 		distCENTER[2] += deltaY/100.0;
-	} else {
+	} else if(event.ctrlKey) {
+		lightSource[0] += deltaX/100.0;
+		lightSource[1] -= deltaY/100.0;
+	}else {
 
 		rotY += degToRad(deltaX / 5);
 		rotX += degToRad(deltaY / 5);
