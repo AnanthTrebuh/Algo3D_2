@@ -90,12 +90,12 @@ vec3 cookTorranceBeckmann(vec3 I, vec3 N, vec3 V, vec3 L, vec3 Kd, vec3 Ks, floa
 }
 
 float fresnel(vec3 I, vec3 N, float uRefracValue){
-		float c = abs(dot(I, normalize(N)));
-		float g = sqrt((uRefracValue*uRefracValue) + ( c*c) - 1.0);
-		float R = 0.5 * 
-				(((g-c)*(g-c))/((g+c)*(g+c))) * 
-				( 1.0 + (((c * (g+c)-1.0) * (c * (g+c)-1.0)) / ((c * (g-c)+1.0) * (c * (g-c)+1.0) )));
-		return R;
+	float c = abs(dot(I, normalize(N)));
+	float g = sqrt((uRefracValue*uRefracValue) + ( c*c) - 1.0);
+	float R = 0.5 * 
+			(((g-c)*(g-c))/((g+c)*(g+c))) * 
+			( 1.0 + (((c * (g+c)-1.0) * (c * (g+c)-1.0)) / ((c * (g-c)+1.0) * (c * (g-c)+1.0) )));
+	return R;
 }
 
 void main(void)
@@ -122,8 +122,25 @@ void main(void)
 	}
 	else if(uIsCookTor){
 		
+		float sigma = 0.2;
+		float cosT = dot(normalize(N),normalize(M));
+		float theta = acos(cosT);
+		float tanT = tan(theta);
+		float pi = 3.14159265359;
+
+		float Fr = fresnel(I, M, uRefracValue);
+		float D = exp(-(tanT * tanT) / ( 2.0 * sigma  * sigma)) / (pi * sigma * sigma * cosT * cosT * cosT * cosT);
+		float G = min(1.0, min((2.0*dot(N,M)*dot(N,O))/dot(O,M),(2.0*dot(N,M)*dot(N,I))/dot(I,M)));
+
+		float Fs = (Fr*D*G)/4.0*abs(dot(I,N))*abs(dot(O,N));
+
+		vec3 tamere = Fs*cosT *vec3(1.0,1.0,1.0);
+
+		vec4 L = textureCube(uSkybox,tamere);
+
+
 		vec3 col = vec3(0.0,0.6,0.4) * dot(N,normalize(vec3(-pos3D)));
-		gl_FragColor = vec4(col, 1.0);
+		gl_FragColor = L;
 	}
 	else {
 		vec3 col = vec3(0.0,0.6,0.4) * dot(N,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
