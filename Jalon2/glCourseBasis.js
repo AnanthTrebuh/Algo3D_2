@@ -17,7 +17,7 @@ var OBJ1 = null;
 var PLANE = null;
 var CUBE = null;
 
-var objet = "sphere.obj";
+var objet = "bunny.obj";
 var sliderValue = 1.0;
 var sigmaValue = 0.01;
 
@@ -69,8 +69,10 @@ class objmesh {
 
 		this.shader.isMirrorUniform = gl.getUniformLocation(this.shader, "uIsMirror");
 		this.shader.isRefracUniform = gl.getUniformLocation(this.shader, "uIsRefrac");
-		this.shader.refractValue = gl.getUniformLocation(this.shader, "uRefracValue");
 		this.shader.isCookTor = gl.getUniformLocation(this.shader, "uIsCookTor");
+		this.shader.refractValue = gl.getUniformLocation(this.shader, "uRefracValue");
+		this.shader.sigmaValue = gl.getUniformLocation(this.shader, "uSigmaValue");
+
 
 	}
 	
@@ -84,8 +86,9 @@ class objmesh {
 		gl.uniformMatrix4fv(this.shader.pMatrixUniform, false, pMatrix);
 		gl.uniform1i(this.shader.isMirrorUniform, this.isMirror);
 		gl.uniform1i(this.shader.isRefracUniform, this.isRefrac);
-		gl.uniform1f(this.shader.refractValue, sliderValue);
 		gl.uniform1i(this.shader.isCookTor, this.isCookTor);
+		gl.uniform1f(this.shader.refractValue, sliderValue);
+		gl.uniform1f(this.shader.sigmaValue, sigmaValue);
 
 	}
 	
@@ -301,10 +304,15 @@ function initGL(canvas)
 {
 	try {
 		gl = canvas.getContext("experimental-webgl");
-		gl.viewportWidth = canvas.width;
-		gl.viewportHeight = canvas.height;
-		gl.viewport(0, 0, canvas.width, canvas.height);
+		const width = canvas.clientWidth;
+		const height = canvas.clientHeight;
 
+		canvas.width = width;
+		canvas.height = height;
+
+		gl.viewportWidth = width;
+		gl.viewportHeight = height;
+		gl.viewport(0, 0, canvas.width, canvas.height);
 		gl.clearColor(0.7, 0.7, 0.7, 1.0);
 		gl.enable(gl.DEPTH_TEST);
 		gl.enable(gl.CULL_FACE);
@@ -492,7 +500,7 @@ function webGLStart() {
 
 // =====================================================
 function drawScene() {
-	console.log("drawScene");
+	//console.log("drawScene");
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	//PLANE.draw();
 	CUBE.draw();
@@ -524,7 +532,7 @@ function getSliderVal() {
 
 function getSigmaVal(){
 	sigmaValue = document.getElementById("sigma").value;
-	console.log("SigmaValue : " +sigmaValue);
+	console.log("SigmaValue : " + sigmaValue);
 }
 function changeObj(object){
 	objet = ''+object+'.obj';

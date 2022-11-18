@@ -294,10 +294,6 @@ function initGL(canvas)
 {
 	try {
 		gl = canvas.getContext("experimental-webgl");
-		gl.viewportWidth = canvas.width;
-		gl.viewportHeight = canvas.height;
-		gl.viewport(0, 0, canvas.width, canvas.height);
-
 		gl.clearColor(0.7, 0.7, 0.7, 1.0);
 		gl.enable(gl.DEPTH_TEST);
 		gl.enable(gl.CULL_FACE);
@@ -485,7 +481,7 @@ function webGLStart() {
 
 // =====================================================
 function drawScene() {
-	console.log("drawScene");
+	//console.log("drawScene");
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	//PLANE.draw();
 	CUBE.draw();
