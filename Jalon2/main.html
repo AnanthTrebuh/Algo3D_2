@@ -33,6 +33,10 @@
 					<label for="slider" class="form-label">Réfraction</label>
 					<input type="range" min="1.0" max="6.0" value="1.0" class="slider" step="0.01" id="slider" oninput="getSliderVal()">
 				</div>
+				<div class="slidecontainer">
+					<label for="sigma" class="form-label">Sigma</label>
+					<input type="range" min="0.01" max="0.5" value="0.01" class="slider" step="0.01" id="sigma" oninput="getSigmaVal()">
+				</div>
 				
 				<div>
 					<img src="./skybox/Water/right.jpg" class="rounded float-start" alt="Water" width="200" height="240" onclick="changeImage(this.id)" id="Water"/>
