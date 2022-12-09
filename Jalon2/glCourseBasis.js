@@ -17,7 +17,7 @@ var OBJ1 = null;
 var PLANE = null;
 var CUBE = null;
 
-var objet = "bunny.obj";
+var objet = "sphere.obj";
 var sliderValue = 1.0;
 var sigmaValue = 0.01;
 var lightSource = [0.0, 0.0, 0.0];
