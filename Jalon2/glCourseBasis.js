@@ -531,12 +531,14 @@ function changeImage(numImage) {
 
 function getSliderVal() {
 	sliderValue =  document.getElementById("slider").value;
-	console.log("sliderValue : "+sliderValue);
+	document.getElementById("refract").innerHTML=sliderValue;
 }
 
 function getSigmaVal(){
 	sigmaValue = document.getElementById("sigma").value;
-	console.log("SigmaValue : " + sigmaValue);
+	document.getElementById("sigmaVal").innerHTML=sigmaValue;
+
+	// console.log("SigmaValue : " + sigmaValue);
 }
 function changeObj(object){
 	objet = ''+object+'.obj';
