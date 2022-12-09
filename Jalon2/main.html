@@ -26,6 +26,10 @@
 						<input class="form-check-input" type="checkbox" id="refractSwitch" onclick="setRefrac()">
 						<label class="form-check-label" for="refractSwitch" >Refraction</label>
 					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="cookTorSwitch" onclick="setCookTor()">
+						<label class="form-check-label" for="cookTorSwitch" >Cook & Torrence</label>
+					</div>
 					<div class="slidecontainer">
 						<label for="slider" class="form-label">Réfraction : <span id="refract"></span></label> 
 						<input type="range" min="1.0" max="3.0" value="1.0" class="slider" step="0.01" id="slider" oninput="getSliderVal()">
@@ -39,7 +43,7 @@
 					<input type="color" id="colorpicker" value="#0000ff">
 					<div>
 						<img src="./skybox/Water/right.jpg" class="rounded float-start" alt="Water" width="50" height="50" onclick="changeImage(this.id)" id="Water"/>
-						<img src="./skybox/Space/right.jpg" class="rounded float-start"alt="Space" width="50" height="50" onclick="changeImage(this.id)" id="Space"/>
+						<img src="./skybox/Space/right.jpg" class="rounded float-start" alt="Space" width="50" height="50" onclick="changeImage(this.id)" id="Space"/>
 					<!-- </div>
 					<div>	 -->
 						<img src="./skybox/RedSpace/right.jpg" class="rounded float-start" alt="RedSpace"width="50" height="50" onclick="changeImage(this.id)" id="RedSpace"/>

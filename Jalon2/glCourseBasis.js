@@ -10,7 +10,7 @@ var distCENTER;
 var textureCube;
 var isMirror = false;
 var isRefrac = false;
-var isCookTor = true;
+var isCookTor = false;
 // =====================================================
 
 var OBJ1 = null;
@@ -466,7 +466,6 @@ function loadTextures(path) {
 
 // =====================================================
 function webGLStart() {
-	
 	var canvas = document.getElementById("WebGL-test");
 	document.getElementById("mirrorSwitch").checked=false;
 	document.getElementById("refractSwitch").checked=false;
@@ -522,6 +521,12 @@ function setRefrac() {
 	isRefrac = !isRefrac;
 	OBJ1.isRefrac = !OBJ1.isRefrac;
 	console.log("Refrac : "+this.isRefrac);
+}
+
+function setCookTor() {
+	isCookTor = !isCookTor;
+	OBJ1.isCookTor = !OBJ1.isCookTor;
+	console.log("CookTor : "+this.isCookTor);
 }
 
 function changeImage(numImage) {
