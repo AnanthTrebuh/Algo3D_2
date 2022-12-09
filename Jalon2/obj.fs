@@ -14,6 +14,7 @@ uniform float uRefracValue;
 uniform float uSigmaValue;
 uniform bool uIsCookTor;
 uniform vec3 uLightSource;
+uniform vec3 uColorObj;
 
 // ==============================================
 
@@ -107,12 +108,12 @@ void main(void)
 		vec3 speculaire = Ks * (Fr * D * G) / (4.0 * NdotI * NdotO);
 		vec3 diffuse = Kd/pi * (1.0 - Fr);
 		vec3 fr = diffuse + speculaire;
-		vec3 L = vec3(0.0,2.5,2.5) * fr * cosT;
+		vec3 L = (uColorObj * 5.0) * fr * cosT;
 
 		gl_FragColor = vec4(L,1.0);
 	}
 	else {
-		vec3 col = vec3(0.0,0.6,0.4) * dot(N,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
+		vec3 col = uColorObj * dot(N,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
 		gl_FragColor = vec4(col,1.0);
 	}
 }

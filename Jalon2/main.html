@@ -27,7 +27,7 @@
 						<label class="form-check-label" for="refractSwitch" >Refraction</label>
 					</div>
 					<div class="slidecontainer">
-						<label for="slider" class="form-label">Réfraction : <span id="refract"></span></label> 
+						<label for="slider" class="form-label">Refraction : <span id="refract"></span></label> 
 						<input type="range" min="1.0" max="3.0" value="1.0" class="slider" step="0.01" id="slider" oninput="getSliderVal()">
 						
 					</div>
@@ -36,17 +36,14 @@
 						<input type="range" min="0.01" max="1.0" value="0.01" class="slider" step="0.01" id="sigma" oninput="getSigmaVal()">
 					</div>
 					<label for="colorpicker">Color Picker:</label>
-					<input type="color" id="colorpicker" value="#0000ff">
+					<input type="color" id="colorpicker" value="#0000ff" onchange="getColorVal()">
 					<div>
 						<img src="./skybox/Water/right.jpg" class="rounded float-start" alt="Water" width="50" height="50" onclick="changeImage(this.id)" id="Water"/>
 						<img src="./skybox/Space/right.jpg" class="rounded float-start"alt="Space" width="50" height="50" onclick="changeImage(this.id)" id="Space"/>
-					<!-- </div>
-					<div>	 -->
 						<img src="./skybox/RedSpace/right.jpg" class="rounded float-start" alt="RedSpace"width="50" height="50" onclick="changeImage(this.id)" id="RedSpace"/>
 						<img src="./skybox/Mountain/right.jpg" class="rounded float-start"alt="Mountain" width="50" height="50" onclick="changeImage(this.id)" id="Mountain"/>
 						
 					</div>
-					<!-- <div> -->
 						<select class="form-select" name="obj" id="obj" onchange="changeObj(this.value)">
 							<option value="bunny" selected="selected">Bunny</option>
 							<option value="cube">Cube</option>
@@ -56,7 +53,6 @@
 						</select>
 				</div>
 			</div>
-				<!-- <br><br> -->
 </body>
 
 

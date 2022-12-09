@@ -21,6 +21,7 @@ var objet = "bunny.obj";
 var sliderValue = 1.0;
 var sigmaValue = 0.01;
 var lightSource = [0.0, 0.0, 0.0];
+var color = [1.0, 1.0, 1.0];
 
 
 // =====================================================
@@ -75,6 +76,7 @@ class objmesh {
 		this.shader.sigmaValue = gl.getUniformLocation(this.shader, "uSigmaValue");
 
 		this.shader.lightSource = gl.getUniformLocation(this.shader, "uLightSource");
+		this.shader.color = gl.getUniformLocation(this.shader, "uColorObj");
 
 
 	}
@@ -93,6 +95,7 @@ class objmesh {
 		gl.uniform1f(this.shader.refractValue, sliderValue);
 		gl.uniform1f(this.shader.sigmaValue, sigmaValue);
 		gl.uniform3fv(this.shader.lightSource, lightSource);
+		gl.uniform3fv(this.shader.color, color);
 
 	}
 	
@@ -538,7 +541,6 @@ function getSigmaVal(){
 	sigmaValue = document.getElementById("sigma").value;
 	document.getElementById("sigmaVal").innerHTML=sigmaValue;
 
-	// console.log("SigmaValue : " + sigmaValue);
 }
 function changeObj(object){
 	objet = ''+object+'.obj';
@@ -546,3 +548,16 @@ function changeObj(object){
 	OBJ1.draw();
 	console.log(objet)
 }
+function getColorVal(){
+	var colorTemp = hexToRgb(document.getElementById("colorpicker").value);
+	color = [colorTemp.r/255,colorTemp.g/255,colorTemp.b/255];
+	console.log(color);
+}
+function hexToRgb(hex) {
+	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	return result ? {
+	  r: parseInt(result[1], 16),
+	  g: parseInt(result[2], 16),
+	  b: parseInt(result[3], 16)
+	} : null;
+  }
