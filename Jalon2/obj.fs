@@ -72,7 +72,7 @@ void main(void)
 		float R = fresnel(I, N, uRefracValue);
 		float T = 1.0 - R;
 
-		gl_FragColor = (textRefrac * R) + (textMirror * T);    
+		gl_FragColor = (textRefrac * T) + (textMirror * R);    
 	}
 	else if (uIsMirror){
 		gl_FragColor = textMirror;
