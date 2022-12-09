@@ -17,7 +17,7 @@ var OBJ1 = null;
 var PLANE = null;
 var CUBE = null;
 
-var objet = "sphere.obj";
+var objet = "bunny.obj";
 var sliderValue = 1.0;
 var sigmaValue = 0.01;
 var lightSource = [0.0, 0.0, 0.0];
@@ -516,19 +516,31 @@ function drawScene() {
 
 function setMirror() {
 	isMirror = !isMirror;
+	isCookTor = false;
 	OBJ1.isMirror = !OBJ1.isMirror;
+	OBJ1.isCookTor = false;
+	document.getElementById("cookTorSwitch").checked=false;
 	console.log("Mirror : "+this.isMir);
 }
 
 function setRefrac() {
 	isRefrac = !isRefrac;
+	isCookTor = false;
 	OBJ1.isRefrac = !OBJ1.isRefrac;
+	OBJ1.isCookTor = false;
+	document.getElementById("cookTorSwitch").checked=false;
 	console.log("Refrac : "+this.isRefrac);
 }
 
 function setCookTor() {
 	isCookTor = !isCookTor;
+	isRefrac = false;
+	isMirror = false;
 	OBJ1.isCookTor = !OBJ1.isCookTor;
+	OBJ1.isRefrac = false;
+	OBJ1.isMirror = false;
+	document.getElementById("mirrorSwitch").checked=false;
+	document.getElementById("refractSwitch").checked=false;
 	console.log("CookTor : "+this.isCookTor);
 }
 
