@@ -85,7 +85,6 @@ void main(void)
 		vec3 lightSource = uLightSource;
 
 		vec3 Kd = uColorObj;
-		vec3 Ks = vec3(1.0);
 		vec3 i = normalize(lightSource - pos3D.xyz);
 		vec3 o = normalize(-pos3D.xyz);
 		vec3 M = normalize(i + o);
@@ -103,7 +102,7 @@ void main(void)
 		float D = beckmann(cosT, uSigmaValue, pi);
 		float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
 
-		vec3 speculaire = Ks * (Fr * D * G) / (4.0 * NdotI * NdotO);
+		vec3 speculaire = vec3((Fr * D * G) / (4.0 * NdotI * NdotO));
 		vec3 diffuse = Kd/pi * (1.0 - Fr);
 		vec3 fr = diffuse + speculaire;
 		vec3 L = (2.0) * fr * cosT;
