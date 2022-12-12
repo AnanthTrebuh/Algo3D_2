@@ -70,6 +70,7 @@ void main(void)
 	vec4 textRefrac = uIsRefrac ? refraction(I, N, ratio) : vec4(0,0,0,0);
 	vec4 textMirror = uIsMirror ? reflection(I, N) : vec4(0,0,0,0);
 
+	
 	if(uIsMirror && uIsRefrac){
 		float R = fresnel(I, N, uRefracValue);
 		float T = 1.0 - R;
@@ -78,9 +79,6 @@ void main(void)
 	}
 	else if (uIsMirror){
 		gl_FragColor = textMirror;
-	}
-	else if (uIsRefrac){
-		gl_FragColor = textRefrac;
 	}
 	else if(uIsCookTor){
 		vec3 lightSource = uLightSource;

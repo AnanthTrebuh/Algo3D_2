@@ -521,15 +521,30 @@ function drawScene() {
 
 function setMirror() {
 	isMirror = !isMirror;
+	isCookTor = false;
 	OBJ1.isMirror = !OBJ1.isMirror;
-	console.log("Mirror : "+this.isMir);
+	OBJ1.isCookTor = false;
+	document.getElementById("cookTorSwitch").checked=false;
+	if(!isMirror) {
+		document.getElementById("refractSwitch").checked=false;
+		isRefrac = false;
+		OBJ1.isRefrac = false;
+	}
 }
 
 function setRefrac() {
 	isRefrac = !isRefrac;
+	isCookTor = false;
 	OBJ1.isRefrac = !OBJ1.isRefrac;
-	console.log("Refrac : "+this.isRefrac);
+	OBJ1.isCookTor = false;
+	document.getElementById("cookTorSwitch").checked=false;
+	if(isRefrac){
+		document.getElementById("mirrorSwitch").checked=true;
+		isMirror = true;
+		OBJ1.isMirror = true;
+	}
 }
+
 
 function setCookTor() {
 	isCookTor = !isCookTor;
