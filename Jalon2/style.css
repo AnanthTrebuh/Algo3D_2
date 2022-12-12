@@ -1,17 +1,10 @@
-/* body {
-    width: 90%;
-    max-width: 900px;
-    margin: 0 auto;
-    font: .9em/1.2 Arial, Helvetica, sans-serif;
-  } */
-  
   .box {
     float: right;
     position: absolute;
     top: 0;
     right: 0;
     margin-right: 10px;
-    width: 200px;
+    width: 250px;
     height: 400px;
     border-radius: 5px;
     background-color: rgb(255,255,255);
