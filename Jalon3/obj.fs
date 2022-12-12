@@ -9,10 +9,11 @@ varying mat4 rMat;
 
 uniform bool uIsMirror;
 uniform bool uIsRefrac;
+uniform bool uIsCookTor;
+uniform bool uIsSample;
 uniform samplerCube uSkybox;
 uniform float uRefracValue;
 uniform float uSigmaValue;
-uniform bool uIsCookTor;
 uniform vec3 uLightSource;
 uniform vec3 uColorObj;
 
@@ -85,7 +86,6 @@ void main(void)
 		vec3 lightSource = uLightSource;
 
 		vec3 Kd = uColorObj;
-		vec3 Ks = vec3(1.0);
 		vec3 i = normalize(lightSource - pos3D.xyz);
 		vec3 o = normalize(-pos3D.xyz);
 		vec3 M = normalize(i + o);
@@ -99,14 +99,18 @@ void main(void)
 		float OdotM = dot(normalize(o),normalize(M));
 		float IdotM = dot(normalize(i),normalize(M));
 
-		float Fr = fresnel(I, M, uRefracValue);
+		float F = fresnel(I, M, uRefracValue);
 		float D = beckmann(cosT, uSigmaValue, pi);
 		float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
 
-		vec3 speculaire = Ks * (Fr * D * G) / (4.0 * NdotI * NdotO);
-		vec3 diffuse = Kd/pi * (1.0 - Fr);
-		vec3 fr = diffuse + speculaire;
-		vec3 L = (2.0) * fr * cosT;
+		vec3 speculaire = vec3((F * D * G) / (4.0 * NdotI * NdotO));
+		vec3 diffuse = Kd/pi * (1.0 - F);
+		vec3 Fr = diffuse + speculaire;
+		vec3 L = (2.0) * Fr * NdotI;
+
+		if (uIsSample){
+
+		}
 
 		gl_FragColor = vec4(L,1.0);
 	}
