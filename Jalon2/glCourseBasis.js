@@ -442,8 +442,8 @@ function loadTextures(path) {
         // Upload the canvas to the cubemap face.
         const level = 0
         const internalFormat = gl.RGBA
-        const width = 512
-        const height = 512
+        const width = 1024
+        const height = 1024
         const format = gl.RGBA
         const type = gl.UNSIGNED_BYTE
 
@@ -520,7 +520,11 @@ function setMirror() {
 	OBJ1.isMirror = !OBJ1.isMirror;
 	OBJ1.isCookTor = false;
 	document.getElementById("cookTorSwitch").checked=false;
-	console.log("Mirror : "+this.isMir);
+	if(!isMirror) {
+		document.getElementById("refractSwitch").checked=false;
+		isRefrac = false;
+		OBJ1.isRefrac = false;
+	}
 }
 
 function setRefrac() {
@@ -529,7 +533,11 @@ function setRefrac() {
 	OBJ1.isRefrac = !OBJ1.isRefrac;
 	OBJ1.isCookTor = false;
 	document.getElementById("cookTorSwitch").checked=false;
-	console.log("Refrac : "+this.isRefrac);
+	if(isRefrac){
+		document.getElementById("mirrorSwitch").checked=true;
+		isMirror = true;
+		OBJ1.isMirror = true;
+	}
 }
 
 function setCookTor() {

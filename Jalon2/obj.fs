@@ -78,9 +78,6 @@ void main(void)
 	else if (uIsMirror){
 		gl_FragColor = textMirror;
 	}
-	else if (uIsRefrac){
-		gl_FragColor = textRefrac;
-	}
 	else if(uIsCookTor){
 		vec3 lightSource = uLightSource;
 
