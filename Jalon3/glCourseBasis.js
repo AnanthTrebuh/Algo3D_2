@@ -559,7 +559,7 @@ function changeObj(object){
 	console.log(objet)
 }
 function getColorVal(){
-	var colorTemp = hexToRgb(document.getElementById("colorchooser").value);
+	var colorTemp = hexToRgb(document.getElementById("colorpicker").value);
 	color = [colorTemp.r/255,colorTemp.g/255,colorTemp.b/255];
 	console.log(color);
 }
