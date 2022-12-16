@@ -62,10 +62,6 @@ float masking(float NdotM,float NdotI, float NdotO, float OdotM, float IdotM){
 	return G;
 }
 
-float MaxDot(vec3 a, vec3 b){
-	return max(0.0,dot(normalize(a),normalize(b)));
-}
-
 float rand(vec2 co){
     return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
 }
@@ -96,14 +92,14 @@ void main(void)
 		vec3 o = normalize(-pos3D.xyz);
 		vec3 M = normalize(i + o);
 
-		float cosT = max(0.0,dot(normalize(N),normalize(M)));
+		float cosT = dot(normalize(N),normalize(M));
 		float pi = 3.14159265359;
 
-		float NdotM = max(0.0,dot(normalize(N),normalize(M)));
-		float NdotI = max(0.0,dot(normalize(N),normalize(i)));
-		float NdotO = max(0.0,dot(normalize(N),normalize(o)));
-		float OdotM = max(0.0,dot(normalize(o),normalize(M)));
-		float IdotM = max(0.0,dot(normalize(i),normalize(M)));
+		float NdotM = dot(normalize(N),normalize(M));
+		float NdotI = dot(normalize(N),normalize(i));
+		float NdotO = dot(normalize(N),normalize(o));
+		float OdotM = dot(normalize(o),normalize(M));
+		float IdotM = dot(normalize(i),normalize(M));
 
 		float F = fresnel(I, M, uRefracValue);
 		float D = beckmann(cosT, uSigmaValue, pi);
@@ -115,8 +111,12 @@ void main(void)
 		vec3 L = (2.0) * Fr * NdotI;
 
 		if (uIsSample){
-			// float phi = 2.0 * pi * epsilon1;
-			// float theta = atan(sqrt(-uSigmaValue * log(1.0-epsilon2)));
+
+			// float ksi1 = rand(gl_FragCoord.xy);
+			// float ksi2 = rand(gl_FragCoord.xy + vec2(1.0,1.0));
+
+			// float phi = 2.0 * pi * ksi1;
+			// float theta = atan(sqrt(-uSigmaValue * log(1.0-ksi2)));
 
 			// float x = sin(theta) * cos(phi);
 			// float y = sin(theta) * sin(phi);
