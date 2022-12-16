@@ -115,8 +115,12 @@ void main(void)
 		vec3 L = (2.0) * Fr * NdotI;
 
 		if (uIsSample){
-			// float phi = 2.0 * pi * epsilon1;
-			// float theta = atan(sqrt(-uSigmaValue * log(1.0-epsilon2)));
+
+			// float ksi1 = rand(gl_FragCoord.xy);
+			// float ksi2 = rand(gl_FragCoord.xy + vec2(1.0,1.0));
+
+			// float phi = 2.0 * pi * ksi1;
+			// float theta = atan(sqrt(-uSigmaValue * log(1.0-ksi2)));
 
 			// float x = sin(theta) * cos(phi);
 			// float y = sin(theta) * sin(phi);
