@@ -545,10 +545,15 @@ function setRefrac() {
 	}
 }
 
-
 function setCookTor() {
 	isCookTor = !isCookTor;
+	isRefrac = false;
+	isMirror = false;
 	OBJ1.isCookTor = !OBJ1.isCookTor;
+	OBJ1.isRefrac = false;
+	OBJ1.isMirror = false;
+	document.getElementById("mirrorSwitch").checked=false;
+	document.getElementById("refractSwitch").checked=false;
 	console.log("CookTor : "+this.isCookTor);
 }
 

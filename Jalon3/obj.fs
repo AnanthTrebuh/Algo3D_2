@@ -63,7 +63,7 @@ float masking(float NdotM,float NdotI, float NdotO, float OdotM, float IdotM){
 }
 
 float MaxDot(vec3 a, vec3 b){
-	return max(0.0,dot(a,b));
+	return max(0.0,dot(normalize(a),normalize(b)));
 }
 
 float rand(vec2 co){
@@ -96,14 +96,14 @@ void main(void)
 		vec3 o = normalize(-pos3D.xyz);
 		vec3 M = normalize(i + o);
 
-		float cosT = MaxDot(normalize(N),normalize(M));
+		float cosT = max(0.0,dot(normalize(N),normalize(M)));
 		float pi = 3.14159265359;
 
-		float NdotM = MaxDot(normalize(N),normalize(M));
-		float NdotI = MaxDot(normalize(N),normalize(I));
-		float NdotO = MaxDot(normalize(N),normalize(o));
-		float OdotM = MaxDot(normalize(o),normalize(M));
-		float IdotM = MaxDot(normalize(i),normalize(M));
+		float NdotM = max(0.0,dot(normalize(N),normalize(M)));
+		float NdotI = max(0.0,dot(normalize(N),normalize(i)));
+		float NdotO = max(0.0,dot(normalize(N),normalize(o)));
+		float OdotM = max(0.0,dot(normalize(o),normalize(M)));
+		float IdotM = max(0.0,dot(normalize(i),normalize(M)));
 
 		float F = fresnel(I, M, uRefracValue);
 		float D = beckmann(cosT, uSigmaValue, pi);
