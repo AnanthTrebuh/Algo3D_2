@@ -86,10 +86,10 @@ void main(void)
 		vec3 o = normalize(-pos3D.xyz);
 		vec3 M = normalize(i + o);
 
-		float cosT = max(0.0,dot(normalize(N),normalize(M)));
 		float pi = 3.14159265359;
 
 		float NdotM = max(0.0,dot(normalize(N),normalize(M)));
+		float cosT = NdotM;
 		float NdotI = max(0.0,dot(normalize(N),normalize(i)));
 		float NdotO = max(0.0,dot(normalize(N),normalize(o)));
 		float OdotM = max(0.0,dot(normalize(o),normalize(M)));
