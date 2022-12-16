@@ -86,14 +86,14 @@ void main(void)
 		vec3 o = normalize(-pos3D.xyz);
 		vec3 M = normalize(i + o);
 
-		float cosT = max(0.0,dot(normalize(N),normalize(M)));
+		float cosT = dot(normalize(N),normalize(M));
 		float pi = 3.14159265359;
 
-		float NdotM = max(0.0,dot(normalize(N),normalize(M)));
-		float NdotI = max(0.0,dot(normalize(N),normalize(i)));
-		float NdotO = max(0.0,dot(normalize(N),normalize(o)));
-		float OdotM = max(0.0,dot(normalize(o),normalize(M)));
-		float IdotM = max(0.0,dot(normalize(i),normalize(M)));
+		float NdotM = dot(normalize(N),normalize(M));
+		float NdotI = dot(normalize(N),normalize(i));
+		float NdotO = dot(normalize(N),normalize(o));
+		float OdotM = dot(normalize(o),normalize(M));
+		float IdotM = dot(normalize(i),normalize(M));
 
 		float Fr = fresnel(I, M, uRefracValue);
 		float D = beckmann(cosT, uSigmaValue, pi);
