@@ -1,15 +1,18 @@
+*{
+  vertical-align: middle;
+}
+
 .box {
   float: right;
   position: absolute;
   top: 0;
   right: 0;
   margin-right: 10px;
-  width: 250px;
-  height: 400px;
+  width: fit-content;
+  height: fir-content;
   border-radius: 5px;
   background-color: rgb(255,255,255);
   padding: 1em;
-  padding-top: 1em;
 }
 
 .scene{
