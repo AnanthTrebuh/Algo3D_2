@@ -1,5 +1,6 @@
 
 precision mediump float;
+const float pi = 3.14159265359;
 
 // classic obj
 varying vec4 pos3D;
@@ -92,7 +93,6 @@ vec3 randM(){
 
 void main(void)
 {
-	float pi = 3.14159265359;
 	float ratio = 1.0 / uRefracValue;
 	vec3 I = normalize(pos3D.xyz);
 
@@ -151,22 +151,9 @@ void main(void)
 	else if (uIsSample){
 		vec3 o = normalize(-pos3D.xyz);
 
-		vec2 xy = pos3D.xy;
-
-		//calcul de m
-		// float ksi1 = rand(xy);
-		// float ksi2 = rand(xy + ksi1);
-
-		// float phi = 2.0 * pi * ksi2;
-		// float theta = atan(sqrt(-uSigmaValue * log(1.0-ksi1)));
-
-		// float x = sin(theta) * cos(phi);
-		// float y = sin(theta) * sin(phi);
-		// float z = cos(theta);
-
-		// vec3 m = normalize(vec3(x,y,z));	
+		vec2 xy = pos3D.xy;	
 		
-		// rotation de m 		
+		// matrice de rotation 		
 		vec3 iN = vec3(1,0,0);
 		if(dot(normalize(iN), normalize(N)) > 0.9){
 			iN = vec3(0,1,0);
@@ -175,7 +162,6 @@ void main(void)
 		iN = normalize(cross(jN, N));
 
 		mat3 matRot = mat3(iN, jN, N);
-		// m = matRot * m;
 
 		// //calcul de la pdf
 		// float NdotM = dot(normalize(N),normalize(m));
@@ -191,16 +177,38 @@ void main(void)
 		// vec4 Li = textureCube(uSkybox, i.xyz);
 
 		// vec4 test = reflection(I,m);
-		vec4 L = vec4(0.0);
+		vec3 Lo = vec3(0.0);
 
-		for(int i = 0; i<10; i++){
+		for(int j = 0; j<100; j++){
 			vec3 m = randM();
 			m = matRot * m;
-			L += reflection(-o, m);
-		} 
-		L /= 10.0;
+			m = normalize(m);
+			vec3 i = reflect(-o, m);
 
-		gl_FragColor = L; //vec4(m,1.0);
+			float NdotM = dot(normalize(N),normalize(m));
+			float cosT = NdotM;
+			float NdotI = dot(normalize(N),normalize(i));
+			float NdotO = dot(normalize(N),normalize(o));
+			float OdotM = dot(normalize(o),normalize(m));
+			float IdotM = dot(normalize(i),normalize(m));
+
+			float F = fresnel(i, m, uRefracValue);
+			float D = beckmann(cosT, uSigmaValue, pi);
+			float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
+
+			float pdf = D * NdotM;
+			
+			float brdf = (F * D * G) / (4.0 * NdotI * NdotO);
+
+			i = vec3(rMat * vec4(i, 1.0));
+			vec3 Li = textureCube(uSkybox, i.xyz).rgb;
+			Lo += Li * brdf * NdotI / pdf;
+
+			// Lo += textureCube(uSkybox, i.xzy);
+		} 
+		Lo /= 100.0;
+
+		gl_FragColor = vec4(Lo*10.0,1.0);
 	}
 	else {
 		vec3 col = uColorObj * dot(N,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
