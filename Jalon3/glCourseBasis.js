@@ -11,7 +11,7 @@ var textureCube;
 var isMirror = false;
 var isRefrac = false;
 var isCookTor = false;
-var isSample = false;
+var isSample = true;
 // =====================================================
 
 var OBJ1 = null;

@@ -122,42 +122,12 @@ void main(void)
 		vec3 Fr = diffuse + speculaire;
 		vec3 L = (2.0) * Fr * NdotI;
 
-		// if (uIsSample){
-
-		// 	float ksi1 = rand(gl_FragCoord.xy);
-		// 	float ksi2 = rand(gl_FragCoord.xy + ksi1);
-
-		// 	float phi = 2.0 * pi * ksi2;
-		// 	float theta = atan(sqrt(-uSigmaValue * log(1.0-ksi1)));
-
-		// 	float x = sin(theta) * cos(phi);
-		// 	float y = sin(theta) * sin(phi);
-		// 	float z = cos(theta);
-
-		// 	vec3 m = normalize(vec3(x,y,z));
-		// 	// rotation de m 
-
-		// 	float pdf = D * dot(normalize(m), normalize(N));			
-
- 		// 	// vec3 iN = vec3(1,0,0);
-		// 	// if(dot(normalize(iN), normalize(i)) > 0.9){
-		// 	// 	iN = vec3(0,1,0);
-		// 	// }
-		// 	// vec3 jN = normalize(cross(iN, N));
-		// 	// iN = normalize(cross(jN, N));
-
-		// 	// mat3 rot_1 = mat3(iN, jN, N);
-		// 	// mat3 rot = rot_1 * vec3(1.0,0.0,0.0);
-		// 	// mat3 rot = toMat3(multiplyVec3(toMat4(rot_1), vec3(1.0,0.0,0.0)));
-
-		// 	//vec4 iEchan = reflection(o, m);
-
-		// 	gl_FragColor = vec4(0.0,m.y,0.0,1.0);
-		// }
-
 		gl_FragColor = vec4(L,1.0);
 	}
 	else if (uIsSample){
+		vec3 o = normalize(pos3D.xyz);
+
+		//calcul de m
 		float ksi1 = rand(gl_FragCoord.xy);
 		float ksi2 = rand(gl_FragCoord.xy + ksi1);
 
@@ -169,28 +139,29 @@ void main(void)
 		float z = cos(theta);
 
 		vec3 m = normalize(vec3(x,y,z));
-		// rotation de m 
 
+		//calcul de la pdf
 		float NdotM = dot(normalize(N),normalize(m));
 		float cosT = NdotM;
 		float D = beckmann(cosT, uSigmaValue, pi);
 
-		float pdf = D * dot(normalize(m), normalize(N));			
+		float pdf = D * dot(normalize(m), normalize(N));	
+		
+		// rotation de m 		
+		vec3 iN = vec3(1,0,0);
+		if(dot(normalize(iN), normalize(N)) > 0.9){
+			iN = vec3(0,1,0);
+		}
+		vec3 jN = normalize(cross(iN, N));
+		iN = normalize(cross(jN, N));
 
-		// vec3 iN = vec3(1,0,0);
-		// if(dot(normalize(iN), normalize(i)) > 0.9){
-		// 	iN = vec3(0,1,0);
-		// }
-		// vec3 jN = normalize(cross(iN, N));
-		// iN = normalize(cross(jN, N));
+		mat3 matRot = mat3(iN, jN, N);
+		m = matRot * m;
 
-		// mat3 rot_1 = mat3(iN, jN, N);
-		// mat3 rot = rot_1 * vec3(1.0,0.0,0.0);
-		// mat3 rot = toMat3(multiplyVec3(toMat4(rot_1), vec3(1.0,0.0,0.0)));
+		// calcul de i 
+		vec4 i = reflection(o, m);
 
-		//vec4 iEchan = reflection(o, m);
-
-		gl_FragColor = vec4(0.0,m.y,0.0,1.0);
+		gl_FragColor = i;
 	}
 	else {
 		vec3 col = uColorObj * dot(N,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
