@@ -603,7 +603,6 @@ function getSigmaVal(){
 function getSampleVal(){
 	nbSample = document.getElementById("sample").value;
 	document.getElementById("sampleVal").innerHTML=nbSample;
-	console.log(nbSample);
 }
 function changeObj(object){
 	objet = ''+object+'.obj';

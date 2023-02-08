@@ -151,7 +151,7 @@ void main(void)
 	else if (uIsSample){
 		vec3 o = normalize(-pos3D.xyz);
 
-		vec2 xy = pos3D.xy;	
+		vec2 xy = pos3D.xy;
 		
 		// matrice de rotation 		
 		vec3 iN = vec3(1,0,0);
@@ -163,23 +163,12 @@ void main(void)
 
 		mat3 matRot = mat3(iN, jN, N);
 
-		// //calcul de la pdf
-		// float NdotM = dot(normalize(N),normalize(m));
-		// float cosT = NdotM;
-		// float D = beckmann(cosT, uSigmaValue, pi);
-
-		// float pdf = D * dot(normalize(m), normalize(N));
-
-		// // calcul de i 
-		// vec4 i = reflection(-o, m);
-
-		// // calcul de Li
-		// vec4 Li = textureCube(uSkybox, i.xyz);
-
-		// vec4 test = reflection(I,m);
+		int nbIter = 0;
 		vec3 Lo = vec3(0.0);
-
-		for(int j = 0; j<100; j++){
+		for(int j = 0; j<200; j++){
+			// if(j >= uNbSample){
+			// 	break;
+			// }
 			vec3 m = randM();
 			m = matRot * m;
 			m = normalize(m);
@@ -192,23 +181,29 @@ void main(void)
 			float OdotM = dot(normalize(o),normalize(m));
 			float IdotM = dot(normalize(i),normalize(m));
 
-			float F = fresnel(i, m, uRefracValue);
-			float D = beckmann(cosT, uSigmaValue, pi);
-			float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
+			if(NdotI < 0.001 || NdotO < 0.001 || NdotM < 0.001){
+				continue;
+			}
+			else {
+				float F = fresnel(i, m, uRefracValue);
+				float D = beckmann(cosT, uSigmaValue, pi);
+				float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
 
-			float pdf = D * NdotM;
-			
-			float brdf = (F * D * G) / (4.0 * NdotI * NdotO);
+				float pdf = D * NdotM;
+				
+				float brdf = (F * D * G) / (4.0 * NdotI * NdotO);
 
-			i = vec3(rMat * vec4(i, 1.0));
-			vec3 Li = textureCube(uSkybox, i.xyz).rgb;
-			Lo += Li * brdf * NdotI / pdf;
+				i = vec3(rMat * vec4(i, 1.0));
+				vec3 Li = textureCube(uSkybox, i.xyz).rgb;
+				Lo += Li * brdf * NdotI / pdf;
 
-			// Lo += textureCube(uSkybox, i.xzy);
-		} 
-		Lo /= 100.0;
+				// Lo += textureCube(uSkybox, i.xzy);
+				nbIter++;
+			} 
+		}
+		Lo /= float(nbIter);
 
-		gl_FragColor = vec4(Lo*10.0,1.0);
+		gl_FragColor = vec4(Lo ,1.0);
 	}
 	else {
 		vec3 col = uColorObj * dot(N,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
