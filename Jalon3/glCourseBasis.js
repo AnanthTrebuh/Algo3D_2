@@ -21,7 +21,7 @@ var CUBE = null;
 
 var objet = "bunny.obj";
 var sliderValue = 1.0;
-var sigmaValue = 0.01;
+var sigmaValue = 0.0001;
 var lightSource = [0.0, 0.0, 0.0];
 var color = [1.0, 1.0, 1.0];
 
