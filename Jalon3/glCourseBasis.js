@@ -522,9 +522,12 @@ function drawScene() {
 function setMirror() {
 	isMirror = !isMirror;
 	isCookTor = false;
+	isSample = false;
 	OBJ1.isMirror = !OBJ1.isMirror;
 	OBJ1.isCookTor = false;
+	OBJ1.isSample = false;
 	document.getElementById("cookTorSwitch").checked=false;
+	document.getElementById("echantillonnage").checked=false;
 	if(!isMirror) {
 		document.getElementById("refractSwitch").checked=false;
 		isRefrac = false;
@@ -535,9 +538,12 @@ function setMirror() {
 function setRefrac() {
 	isRefrac = !isRefrac;
 	isCookTor = false;
+	isSample = false;
 	OBJ1.isRefrac = !OBJ1.isRefrac;
 	OBJ1.isCookTor = false;
+	OBJ1.isSample = false;
 	document.getElementById("cookTorSwitch").checked=false;
+	document.getElementById("echantillonnage").checked=false;
 	if(isRefrac){
 		document.getElementById("mirrorSwitch").checked=true;
 		isMirror = true;
@@ -549,12 +555,30 @@ function setCookTor() {
 	isCookTor = !isCookTor;
 	isRefrac = false;
 	isMirror = false;
+	isSample = false;
 	OBJ1.isCookTor = !OBJ1.isCookTor;
+	OBJ1.isRefrac = false;
+	OBJ1.isMirror = false;
+	OBJ1.isSample = false;
+	document.getElementById("mirrorSwitch").checked=false;
+	document.getElementById("refractSwitch").checked=false;
+	document.getElementById("echantillonnage").checked=false;
+	console.log("CookTor : "+this.isCookTor);
+}
+
+function setEchantillonnage(){
+	isSample = ! isSample;
+	isCookTor = false;
+	isRefrac = false;
+	isMirror = false;
+	OBJ1.isSample = !OBJ1.isSample;
+	OBJ1.isCookTor = false;
 	OBJ1.isRefrac = false;
 	OBJ1.isMirror = false;
 	document.getElementById("mirrorSwitch").checked=false;
 	document.getElementById("refractSwitch").checked=false;
-	console.log("CookTor : "+this.isCookTor);
+	document.getElementById("cookTorSwitch").checked=false;
+	console.log("Echantillonnage : " + this.isSample);
 }
 
 function changeImage(numImage) {
