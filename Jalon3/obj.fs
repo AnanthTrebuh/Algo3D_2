@@ -72,7 +72,7 @@ float rand(vec2 co){
 }
 
 vec3 randM(){
-	vec2 xy = gl_FragCoord.xy;
+	vec2 xy = pos3D.xy;
 	float pi = 3.14159265359;
 
 	float ksi1 = rand(xy);

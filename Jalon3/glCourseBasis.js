@@ -12,7 +12,7 @@ var isMirror = false;
 var isRefrac = false;
 var isCookTor = false;
 var isSample = false;
-var nbSample = 1;
+var nbSample = 1.0;
 // =====================================================
 
 var OBJ1 = null;
@@ -598,7 +598,11 @@ function getSliderVal() {
 function getSigmaVal(){
 	sigmaValue = document.getElementById("sigma").value;
 	document.getElementById("sigmaVal").innerHTML=sigmaValue;
+}
 
+function getSampleVal(){
+	nbSample = document.getElementById("sample").value;
+	document.getElementById("sampleVal").innerHTML=nbSample;
 }
 function changeObj(object){
 	objet = ''+object+'.obj';
