@@ -11,9 +11,14 @@ uniform bool uIsMirror;
 uniform bool uIsRefrac;
 uniform bool uIsCookTor;
 uniform bool uIsSample;
+
 uniform samplerCube uSkybox;
+
 uniform float uRefracValue;
 uniform float uSigmaValue;
+
+uniform int uNbSample;
+
 uniform vec3 uLightSource;
 uniform vec3 uColorObj;
 
@@ -66,10 +71,29 @@ float rand(vec2 co){
     return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
+vec3 randM(){
+	vec2 xy = gl_FragCoord.xy;
+	float pi = 3.14159265359;
+
+	float ksi1 = rand(xy);
+	float ksi2 = rand(xy + ksi1);
+
+	float phi = 2.0 * pi * ksi2;
+	float theta = atan(sqrt(-uSigmaValue * log(1.0-ksi1)));
+
+	float x = sin(theta) * cos(phi);
+	float y = sin(theta) * sin(phi);
+	float z = cos(theta);
+
+	vec3 m = normalize(vec3(x,y,z));
+	return m;
+}
+
+
 void main(void)
 {
 	float pi = 3.14159265359;
-	float ratio = 1.0/ uRefracValue;
+	float ratio = 1.0 / uRefracValue;
 	vec3 I = normalize(pos3D.xyz);
 
 	vec4 textRefrac;
@@ -125,27 +149,22 @@ void main(void)
 		gl_FragColor = vec4(L,1.0);
 	}
 	else if (uIsSample){
-		vec3 o = normalize(pos3D.xyz);
+		vec3 o = normalize(-pos3D.xyz);
+
+		vec2 xy = pos3D.xy;
 
 		//calcul de m
-		float ksi1 = rand(gl_FragCoord.xy);
-		float ksi2 = rand(gl_FragCoord.xy + ksi1);
+		// float ksi1 = rand(xy);
+		// float ksi2 = rand(xy + ksi1);
 
-		float phi = 2.0 * pi * ksi2;
-		float theta = atan(sqrt(-uSigmaValue * log(1.0-ksi1)));
+		// float phi = 2.0 * pi * ksi2;
+		// float theta = atan(sqrt(-uSigmaValue * log(1.0-ksi1)));
 
-		float x = sin(theta) * cos(phi);
-		float y = sin(theta) * sin(phi);
-		float z = cos(theta);
+		// float x = sin(theta) * cos(phi);
+		// float y = sin(theta) * sin(phi);
+		// float z = cos(theta);
 
-		vec3 m = normalize(vec3(x,y,z));
-
-		//calcul de la pdf
-		float NdotM = dot(normalize(N),normalize(m));
-		float cosT = NdotM;
-		float D = beckmann(cosT, uSigmaValue, pi);
-
-		float pdf = D * dot(normalize(m), normalize(N));	
+		// vec3 m = normalize(vec3(x,y,z));	
 		
 		// rotation de m 		
 		vec3 iN = vec3(1,0,0);
@@ -156,12 +175,32 @@ void main(void)
 		iN = normalize(cross(jN, N));
 
 		mat3 matRot = mat3(iN, jN, N);
-		m = matRot * m;
+		// m = matRot * m;
 
-		// calcul de i 
-		vec4 i = reflection(o, m);
+		// //calcul de la pdf
+		// float NdotM = dot(normalize(N),normalize(m));
+		// float cosT = NdotM;
+		// float D = beckmann(cosT, uSigmaValue, pi);
 
-		gl_FragColor = i;
+		// float pdf = D * dot(normalize(m), normalize(N));
+
+		// // calcul de i 
+		// vec4 i = reflection(-o, m);
+
+		// // calcul de Li
+		// vec4 Li = textureCube(uSkybox, i.xyz);
+
+		// vec4 test = reflection(I,m);
+		vec4 L = vec4(0.0);
+
+		for(int i = 0; i<10; i++){
+			vec3 m = randM();
+			m = matRot * m;
+			L += reflection(-o, m);
+		} 
+		L /= 10.0;
+
+		gl_FragColor = L; //vec4(m,1.0);
 	}
 	else {
 		vec3 col = uColorObj * dot(N,normalize(vec3(-pos3D))); // Lambert rendering, eye light source

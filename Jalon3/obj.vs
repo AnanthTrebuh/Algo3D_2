@@ -6,6 +6,7 @@ uniform bool uIsMirror;
 uniform mat4 uRMatrix;
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
+
 varying mat4 rMat;
 
 varying vec4 pos3D;

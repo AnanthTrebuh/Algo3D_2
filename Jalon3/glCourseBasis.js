@@ -11,7 +11,8 @@ var textureCube;
 var isMirror = false;
 var isRefrac = false;
 var isCookTor = false;
-var isSample = true;
+var isSample = false;
+var nbSample = 1;
 // =====================================================
 
 var OBJ1 = null;
@@ -42,6 +43,7 @@ class objmesh {
 		this.isRefrac = isRefrac;
 		this.isCookTor = isCookTor;
 		this.isSample = isSample;
+		this.nbSample = nbSample;
 		
 		loadObjFile(this);
 		loadShaders(this);
@@ -78,6 +80,7 @@ class objmesh {
 
 		this.shader.refractValue = gl.getUniformLocation(this.shader, "uRefracValue");
 		this.shader.sigmaValue = gl.getUniformLocation(this.shader, "uSigmaValue");
+		this.shader.nbSample = gl.getUniformLocation(this.shader, "uNbSample")
 
 		this.shader.lightSource = gl.getUniformLocation(this.shader, "uLightSource");
 		this.shader.color = gl.getUniformLocation(this.shader, "uColorObj");
@@ -99,6 +102,7 @@ class objmesh {
 		gl.uniform1i(this.shader.isSample, this.isSample);
 		gl.uniform1f(this.shader.refractValue, sliderValue);
 		gl.uniform1f(this.shader.sigmaValue, sigmaValue);
+		gl.uniform1f(this.shader.nbSample, nbSample);
 		gl.uniform3fv(this.shader.lightSource, lightSource);
 		gl.uniform3fv(this.shader.color, color);
 
