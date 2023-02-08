@@ -12,7 +12,7 @@ var isMirror = false;
 var isRefrac = false;
 var isCookTor = false;
 var isSample = false;
-var nbSample = 1.0;
+var nbSample = 1;
 // =====================================================
 
 var OBJ1 = null;
@@ -603,6 +603,7 @@ function getSigmaVal(){
 function getSampleVal(){
 	nbSample = document.getElementById("sample").value;
 	document.getElementById("sampleVal").innerHTML=nbSample;
+	console.log(nbSample);
 }
 function changeObj(object){
 	objet = ''+object+'.obj';
