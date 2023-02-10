@@ -74,7 +74,6 @@ float rand(vec2 co){
 
 vec3 randM(){
 	vec2 xy = pos3D.xy;
-	float pi = 3.14159265359;
 
 	float ksi1 = rand(xy);
 	float ksi2 = rand(xy + ksi1);
@@ -86,8 +85,71 @@ vec3 randM(){
 	float y = sin(theta) * sin(phi);
 	float z = cos(theta);
 
-	vec3 m = normalize(vec3(x,y,z));
+	vec3 m =  normalize(vec3(x,y,z));
 	return m;
+}
+
+vec3 echantillonage(vec3 o, vec3 N){
+	// matrice de rotation 		
+	vec3 iN = vec3(1,0,0);
+	if(dot(normalize(iN), normalize(N)) > 0.9){
+		iN = vec3(0,1,0);
+	}
+	vec3 jN = normalize(cross(iN, N));
+	iN = normalize(cross(jN, N));
+
+	mat3 matRot = mat3(iN, jN, N);
+	// matRot = transpose(matRot);
+
+	int nbIter = 0;
+	vec3 Lo = vec3(0.0);
+	for(int j = 0; j<200; j++){
+		// if(j >= uNbSample)
+		// 	continue;
+
+		vec3 m = randM();
+		m = matRot * m;
+		m = normalize(m);
+
+		// vec3 m = normalize(N);
+
+		vec3 i = reflect(-o, m);
+
+		float NdotM = dot(normalize(N),normalize(m));
+		float cosT = NdotM;
+		float NdotI = dot(normalize(N),normalize(i));
+		float NdotO = dot(normalize(N),normalize(o));
+		float OdotM = dot(normalize(o),normalize(m));
+		float IdotM = dot(normalize(i),normalize(m));
+
+		if(NdotI < 0.001 || NdotO < 0.001 || NdotM < 0.001)
+			continue;
+		
+		float F = fresnel(i, m, uRefracValue);
+		float D = beckmann(cosT, uSigmaValue, pi);
+		float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
+
+		float pdf = D * NdotM;
+		
+		float brdf = (F * D * G) / (4.0 * NdotI * NdotO);
+
+		i = vec3(rMat * vec4(i, 1.0));
+		vec3 Li = textureCube(uSkybox, i.xyz).rgb;
+		Lo += Li * brdf * NdotI / pdf;
+
+		// Lo += textureCube(uSkybox, i.xzy);
+		nbIter++; 
+	}
+
+	Lo /= float(nbIter);
+
+	return Lo;
+}
+
+mat3 transpose(mat3 m) {
+    return mat3(m[0][0], m[1][0], m[2][0],
+                m[0][1], m[1][1], m[2][1],
+                m[0][2], m[1][2], m[2][2]);
 }
 
 
@@ -150,60 +212,62 @@ void main(void)
 	}
 	else if (uIsSample){
 		vec3 o = normalize(-pos3D.xyz);
-
-		vec2 xy = pos3D.xy;
 		
 		// matrice de rotation 		
-		vec3 iN = vec3(1,0,0);
-		if(dot(normalize(iN), normalize(N)) > 0.9){
-			iN = vec3(0,1,0);
-		}
-		vec3 jN = normalize(cross(iN, N));
-		iN = normalize(cross(jN, N));
+		// vec3 iN = vec3(1,0,0);
+		// if(dot(normalize(iN), normalize(N)) > 0.9){
+		// 	iN = vec3(0,1,0);
+		// }
+		// vec3 jN = normalize(cross(iN, N));
+		// iN = normalize(cross(jN, N));
 
-		mat3 matRot = mat3(iN, jN, N);
+		// mat3 matRot = mat3(iN, jN, N);
+		// // matRot = transpose(matRot);
 
-		int nbIter = 0;
-		vec3 Lo = vec3(0.0);
-		for(int j = 0; j<200; j++){
-			// if(j >= uNbSample){
-			// 	break;
-			// }
-			vec3 m = randM();
-			m = matRot * m;
-			m = normalize(m);
-			vec3 i = reflect(-o, m);
+		// int nbIter = 0;
+		// vec3 Lo = vec3(0.0);
+		// for(int j = 0; j<200; j++){
+		// 	if(j >= uNbSample)
+		// 		continue;
 
-			float NdotM = dot(normalize(N),normalize(m));
-			float cosT = NdotM;
-			float NdotI = dot(normalize(N),normalize(i));
-			float NdotO = dot(normalize(N),normalize(o));
-			float OdotM = dot(normalize(o),normalize(m));
-			float IdotM = dot(normalize(i),normalize(m));
+		// 	vec3 m = randM();
+		// 	m = matRot * m;
+		// 	m = normalize(m);
 
-			if(NdotI < 0.001 || NdotO < 0.001 || NdotM < 0.001){
-				continue;
-			}
-			else {
-				float F = fresnel(i, m, uRefracValue);
-				float D = beckmann(cosT, uSigmaValue, pi);
-				float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
+		// 	// vec3 m = normalize(N);
 
-				float pdf = D * NdotM;
-				
-				float brdf = (F * D * G) / (4.0 * NdotI * NdotO);
+		// 	vec3 i = reflect(-o, m);
 
-				i = vec3(rMat * vec4(i, 1.0));
-				vec3 Li = textureCube(uSkybox, i.xyz).rgb;
-				Lo += Li * brdf * NdotI / pdf;
+		// 	float NdotM = dot(normalize(N),normalize(m));
+		// 	float cosT = NdotM;
+		// 	float NdotI = dot(normalize(N),normalize(i));
+		// 	float NdotO = dot(normalize(N),normalize(o));
+		// 	float OdotM = dot(normalize(o),normalize(m));
+		// 	float IdotM = dot(normalize(i),normalize(m));
 
-				// Lo += textureCube(uSkybox, i.xzy);
-				nbIter++;
-			} 
-		}
-		Lo /= float(nbIter);
+		// 	if(NdotI < 0.001 || NdotO < 0.001 || NdotM < 0.001)
+		// 		continue;
+			
+		// 	float F = fresnel(i, m, uRefracValue);
+		// 	float D = beckmann(cosT, uSigmaValue, pi);
+		// 	float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
 
-		gl_FragColor = vec4(Lo ,1.0);
+		// 	float pdf = D * NdotM;
+			
+		// 	float brdf = (F * D * G) / (4.0 * NdotI * NdotO);
+
+		// 	i = vec3(rMat * vec4(i, 1.0));
+		// 	vec3 Li = textureCube(uSkybox, i.xyz).rgb;
+		// 	Lo += Li * brdf * NdotI / pdf;
+
+		// 	// Lo += textureCube(uSkybox, i.xzy);
+		// 	nbIter++; 
+		// }
+		// Lo /= float(nbIter);
+
+		vec3 Lo = echantillonage(o,N);
+
+		gl_FragColor = vec4(Lo*10.0 ,1.0);
 	}
 	else {
 		vec3 col = uColorObj * dot(N,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
