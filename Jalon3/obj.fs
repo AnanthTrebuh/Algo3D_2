@@ -17,7 +17,9 @@ uniform samplerCube uSkybox;
 
 uniform float uRefracValue;
 uniform float uSigmaValue;
-uniform int uNbSample;
+
+uniform float uNbSample;
+uniform float uLumino;
 
 uniform vec3 uLightSource;
 uniform vec3 uColorObj;
