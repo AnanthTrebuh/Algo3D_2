@@ -11,17 +11,17 @@ var textureCube;
 var isMirror = false;
 var isRefrac = false;
 var isCookTor = false;
-var isSample = false;
-var nbSample = 1;
+var isSample = true;
 // =====================================================
 
 var OBJ1 = null;
 var PLANE = null;
 var CUBE = null;
 
-var objet = "bunny.obj";
+var objet = "sphere.obj";
 var sliderValue = 1.0;
 var sigmaValue = 0.0001;
+var nbSample = 1.0;
 var lightSource = [0.0, 0.0, 0.0];
 var color = [1.0, 1.0, 1.0];
 
@@ -43,7 +43,6 @@ class objmesh {
 		this.isRefrac = isRefrac;
 		this.isCookTor = isCookTor;
 		this.isSample = isSample;
-		this.nbSample = nbSample;
 		
 		loadObjFile(this);
 		loadShaders(this);
@@ -102,7 +101,7 @@ class objmesh {
 		gl.uniform1i(this.shader.isSample, this.isSample);
 		gl.uniform1f(this.shader.refractValue, sliderValue);
 		gl.uniform1f(this.shader.sigmaValue, sigmaValue);
-		gl.uniform1f(this.shader.nbSample, nbSample);
+		gl.uniform1i(this.shader.nbSample, nbSample);
 		gl.uniform3fv(this.shader.lightSource, lightSource);
 		gl.uniform3fv(this.shader.color, color);
 
@@ -503,7 +502,7 @@ function webGLStart() {
 	mat4.rotate(rotMatrix, rotX, [1, 0, 0]);
 	mat4.rotate(rotMatrix, rotY, [0, 0, 1]);
 
-	distCENTER = vec3.create([0,-0.2,-3]);
+	distCENTER = vec3.create([0,-0.2,-1]);
 	
 	PLANE = new plane();
 	CUBE = new cube();
