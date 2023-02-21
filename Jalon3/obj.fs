@@ -42,7 +42,6 @@ float ddot(vec3 a, vec3 b){
 	return max(0.0,dot(a,b));
 }
 
-// //function t
 
 float fresnel(vec3 I, vec3 N, float uRefracValue){
 	float c = abs(dot(I, N));
@@ -100,128 +99,109 @@ mat3 transpose(mat3 m) {
                 m[0][2], m[1][2], m[2][2]);
 }
 
+vec3 cookTorrance(vec3 Nn, vec3 o){
+	vec3 lightSource = uLightSource;
+
+	vec3 Kd = uColorObj;
+	vec3 i = normalize(lightSource - pos3D.xyz);
+	vec3 M = normalize(i + o);
+
+	float NdotM = ddot(Nn, M); 
+	float cosT = NdotM;
+	float NdotI = ddot(Nn, i); 
+	float NdotO = ddot(Nn, o); 
+	float OdotM = ddot(o, M); 
+	float IdotM = ddot(i, M); 
+
+	float F = fresnel(i, M, uRefracValue);
+	float D = beckmann(cosT, uSigmaValue);
+	float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
+
+	vec3 brdf = vec3((F * D * G) / (4.0 * NdotI * NdotO));
+	vec3 diffuse = Kd/pi * (1.0 - F);
+	vec3 Fr = diffuse + brdf;
+	vec3 L = (2.0) * Fr * NdotI;
+	return L;
+}
+
+vec3 echantillonageImportance(vec3 Nn, vec3 o){	
+	vec3 iN = vec3(1.0,0.0,0.0);
+	if(dot(normalize(iN), Nn) > 0.9){
+		iN = vec3(0.0,1.0,0.0);
+	}
+	vec3 jN = normalize(cross(Nn, iN));
+	iN = normalize(cross(Nn, jN));
+
+	mat3 matRot = mat3(iN, jN, Nn);
+
+	int nbIter = 0;
+	vec3 Lo = vec3(0.0);
+	vec3 m;
+	float NdotM;
+
+	for(int j = 0; j<100; j++){
+		if(nbIter>uNbSample) break;
+
+		m = randM(j);
+		m = matRot * m;
+		m = normalize(m);
+
+		vec3 i = reflect(-o, m);
+
+		NdotM = ddot(Nn, m); 
+	
+		float NdotI = ddot(Nn, i); 
+		float NdotO = ddot(Nn, o); 
+		float OdotM = ddot(o, m); 
+		float IdotM = ddot(i, m); 
+
+		if(NdotI < 0.0001 || NdotO < 0.0001 || NdotM < 0.0001 || OdotM < 0.0001 || IdotM < 0.0001){
+			continue;
+		}
+		
+		float F = fresnel(i, m, uRefracValue);
+		float D = beckmann(NdotM, uSigmaValue);
+		float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
+
+		float pdf = D * NdotM;
+		
+		float brdf = (F * D * G) / (4.0 * NdotI * NdotO);
+
+		i = vec3(rMat * vec4(i, 1.0));
+		vec3 Li = textureCube(uSkybox, i.xzy).xyz;
+		Lo += Li * brdf * NdotI / pdf;
+
+		nbIter++; 
+	}
+
+	Lo /= float(nbIter);
+	return Lo;
+}
 void main(void)
 {
 	float ratio = 1.0 / uRefracValue;
 	vec3 I = normalize(pos3D.xyz);
 	vec3 Nn = normalize(N);
+	vec3 o = normalize(-pos3D.xyz);
 
-	vec4 textRefrac;
-	vec4 textMirror;
-
-	// calcul de la refraction
-	if(uIsRefrac){
-		textRefrac = refraction(I, Nn, ratio);
-	}else{
-		textRefrac = vec4(0,0,0,0);
-	}
-
-	// calcul de la reflection
-	if(uIsMirror){
-		textMirror = reflection(I, Nn);
-	}else{
-		textMirror = vec4(0,0,0,0);
-	}
+	vec4 textRefrac = refraction(I, Nn, ratio);;
+	vec4 textMirror = reflection(I, Nn);
 
 	if(uIsMirror && uIsRefrac){
 		float R = fresnel(I, Nn, uRefracValue);
 		float T = 1.0 - R;
-
 		gl_FragColor = (textRefrac * T) + (textMirror * R);    
 	}
 	else if (uIsMirror){
 		gl_FragColor = textMirror;
 	}
 	else if(uIsCookTor){
-		vec3 lightSource = uLightSource;
-
-		vec3 Kd = uColorObj;
-		vec3 i = normalize(lightSource - pos3D.xyz);
-		vec3 o = normalize(-pos3D.xyz);
-		vec3 M = normalize(i + o);
-
-		float NdotM = ddot(Nn, M); // dot(normalize(Nn),normalize(M));
-		float cosT = NdotM;
-		float NdotI = ddot(Nn, i); //dot(normalize(Nn),normalize(i));
-		float NdotO = ddot(Nn, o); //dot(normalize(Nn),normalize(o));
-		float OdotM = ddot(o, M); //dot(normalize(o),normalize(M));
-		float IdotM = ddot(i, M); //dot(normalize(i),normalize(M));
-
-		float F = fresnel(I, M, uRefracValue);
-		float D = beckmann(cosT, uSigmaValue);
-		float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
-
-		vec3 brdf = vec3((F * D * G) / (4.0 * NdotI * NdotO));
-		vec3 diffuse = Kd/pi * (1.0 - F);
-		vec3 Fr = diffuse + brdf;
-		vec3 L = (2.0) * Fr * NdotI;
-
+		vec3 L = cookTorrance(Nn,o);
 		gl_FragColor = vec4(L,1.0);
 	}
 	else if (uIsSample){
-		vec3 o = normalize(-pos3D.xyz);
-		
-		vec3 iN = vec3(1.0,0.0,0.0);
-		if(dot(normalize(iN), Nn) > 0.9){
-			iN = vec3(0.0,1.0,0.0);
-		}
-		vec3 jN = normalize(cross(Nn, iN));
-		iN = normalize(cross(Nn, jN));
-
-		mat3 matRot = mat3(iN, jN, Nn);
-		// matRot = transpose(matRot);
-
-		int nbIter = 0;
-		vec3 Lo = vec3(0.0);
-		vec3 m;
-		float NdotM;
-
-		for(int j = 0; j<100; j++){
-			if(nbIter>uNbSample) break;
-			//if(j>=uNbSample) break;
-
-			m = randM(j);
-			m = matRot * m;
-			m = normalize(m);
-
-			vec3 i = reflect(-o, m);
-
-			NdotM = ddot(Nn, m); //dot(normalize(Nn),normalize(m));
-			//NdotM=1.0; 
-
-			//float cosT = NdotM;
-			//NdotM = 1.0;
-			float NdotI = ddot(Nn, i); //dot(normalize(Nn),normalize(i));
-			float NdotO = ddot(Nn, o); //dot(normalize(Nn),normalize(o));
-			float OdotM = ddot(o, m); //dot(normalize(o),normalize(m));
-			float IdotM = ddot(i, m); //dot(normalize(i),normalize(m));
-
-			if(NdotI < 0.0001 || NdotO < 0.0001 || NdotM < 0.0001 || OdotM < 0.0001 || IdotM < 0.0001){
-				continue;
-			}
-			
-			float F = fresnel(i, m, uRefracValue);
-			float D = beckmann(NdotM, uSigmaValue);
-			float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
-
-			float pdf = D * NdotM;
-			
-			float brdf = (F * D * G) / (4.0 * NdotI * NdotO);
-
-			i = vec3(rMat * vec4(i, 1.0));
-			vec3 Li = textureCube(uSkybox, i.xzy).xyz;
-			Lo += Li * brdf * NdotI / pdf;
-
-			// Lo += textureCube(uSkybox, i.xzy).xyz; // miroir depoli
-			nbIter++; 
-		}
-
-		Lo /= float(nbIter);
-
-		// vec3 Lo = echantillonage(o,Nn);
-
+		vec3 Lo = echantillonageImportance(Nn, o);
 		gl_FragColor = vec4(Lo*uLumino, 1.0);
-		//gl_FragColor = vec4(NdotM,0.0,0.0,1.0);
 	}
 	else {
 		vec3 col = uColorObj * dot(Nn,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
