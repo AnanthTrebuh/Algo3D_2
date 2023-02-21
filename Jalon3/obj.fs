@@ -12,6 +12,7 @@ uniform bool uIsMirror;
 uniform bool uIsRefrac;
 uniform bool uIsCookTor;
 uniform bool uIsSample;
+uniform bool uIsDepoli;
 
 uniform samplerCube uSkybox;
 
@@ -193,7 +194,11 @@ void main(void)
 		gl_FragColor = (textRefrac * T) + (textMirror * R);    
 	}
 	else if (uIsMirror){
-		gl_FragColor = textMirror;
+		if(uIsDepoli){
+			gl_FragColor = vec4(0.0,0.0,0.0,1.0);
+		}else{
+			gl_FragColor = textMirror;			
+		}
 	}
 	else if(uIsCookTor){
 		vec3 L = cookTorrance(Nn,o);

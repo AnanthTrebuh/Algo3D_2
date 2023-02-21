@@ -12,6 +12,7 @@ var isMirror = false;
 var isRefrac = false;
 var isCookTor = false;
 var isSample = false;
+var isDepoli = false;
 var nbSample = 1.0;
 var lumino = 1.0;
 // =====================================================
@@ -45,6 +46,7 @@ class objmesh {
 		this.isRefrac = isRefrac;
 		this.isCookTor = isCookTor;
 		this.isSample = isSample;
+		this.isDepoli = isDepoli;
 		
 		loadObjFile(this);
 		loadShaders(this);
@@ -78,6 +80,7 @@ class objmesh {
 		this.shader.isRefracUniform = gl.getUniformLocation(this.shader, "uIsRefrac");
 		this.shader.isCookTor = gl.getUniformLocation(this.shader, "uIsCookTor");
 		this.shader.isSample = gl.getUniformLocation(this.shader, "uIsSample");
+		this.shader.isDepoli = gl.getUniformLocation(this.shader, "uIsDepoli");
 
 		this.shader.refractValue = gl.getUniformLocation(this.shader, "uRefracValue");
 		this.shader.sigmaValue = gl.getUniformLocation(this.shader, "uSigmaValue");
@@ -108,6 +111,7 @@ class objmesh {
 		gl.uniform1f(this.shader.lumino, lumino);
 		gl.uniform3fv(this.shader.lightSource, lightSource);
 		gl.uniform3fv(this.shader.color, color);
+		gl.uniform1i(this.shader.isDepoli, isDepoli);
 
 	}
 	

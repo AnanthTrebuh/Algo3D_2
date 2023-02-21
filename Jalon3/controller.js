@@ -2,15 +2,19 @@ function setMirror() {
 	isMirror = !isMirror;
 	isCookTor = false;
 	isSample = false;
+	isDepoli = false;
 	OBJ1.isMirror = !OBJ1.isMirror;
 	OBJ1.isCookTor = false;
 	OBJ1.isSample = false;
+	OBJ1.isDepoli = false;
 	document.getElementById("cookTorSwitch").checked=false;
 	document.getElementById("echantillonnage").checked=false;
 	if(!isMirror) {
 		document.getElementById("refractSwitch").checked=false;
+		document.getElementById("mirrorSwitchOpt").checked=false;
 		isRefrac = false;
 		OBJ1.isRefrac = false;
+		isDepoli = false;
 	}
 }
 
@@ -18,11 +22,14 @@ function setRefrac() {
 	isRefrac = !isRefrac;
 	isCookTor = false;
 	isSample = false;
+	isDepoli = false;
 	OBJ1.isRefrac = !OBJ1.isRefrac;
 	OBJ1.isCookTor = false;
 	OBJ1.isSample = false;
+	OBJ1.isDepoli = false;
 	document.getElementById("cookTorSwitch").checked=false;
 	document.getElementById("echantillonnage").checked=false;
+	document.getElementById("mirrorSwitchOpt").checked=false;
 	if(isRefrac){
 		document.getElementById("mirrorSwitch").checked=true;
 		isMirror = true;
@@ -35,13 +42,16 @@ function setCookTor() {
 	isRefrac = false;
 	isMirror = false;
 	isSample = false;
+	isDepoli = false;
 	OBJ1.isCookTor = !OBJ1.isCookTor;
 	OBJ1.isRefrac = false;
 	OBJ1.isMirror = false;
 	OBJ1.isSample = false;
+	OBJ1.isDepoli = false;
 	document.getElementById("mirrorSwitch").checked=false;
 	document.getElementById("refractSwitch").checked=false;
 	document.getElementById("echantillonnage").checked=false;
+	document.getElementById("mirrorSwitchOpt").checked=false;
 }
 
 function setEchantillonnage(){
@@ -49,13 +59,16 @@ function setEchantillonnage(){
 	isCookTor = false;
 	isRefrac = false;
 	isMirror = false;
+	isDepoli = false;
 	OBJ1.isSample = !OBJ1.isSample;
 	OBJ1.isCookTor = false;
 	OBJ1.isRefrac = false;
 	OBJ1.isMirror = false;
+	OBJ1.isDepoli = false;
 	document.getElementById("mirrorSwitch").checked=false;
 	document.getElementById("refractSwitch").checked=false;
 	document.getElementById("cookTorSwitch").checked=false;
+	document.getElementById("mirrorSwitchOpt").checked=false;
 }
 
 function changeImage(numImage) {
@@ -98,4 +111,9 @@ function hexToRgb(hex) {
 	  g: parseInt(result[2], 16),
 	  b: parseInt(result[3], 16)
 	} : null;
-  }
+}
+function setDepoli(){
+	isDepoli = true;
+	OBJ1.isDepoli = true;
+	console.log("depoli");
+}
