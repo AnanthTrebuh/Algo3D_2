@@ -28,7 +28,7 @@
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="cookTorSwitch" onclick="setCookTor()">
-						<label class="form-check-label" for="cookTorSwitch" >Cook & Torrence</label>
+						<label class="form-check-label" for="cookTorSwitch" >Cook & Torrance</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" id="echantillonnage" onclick="setEchantillonnage()">
@@ -45,9 +45,14 @@
 						<input type="range" min="0.0001" max="0.5" value="0.0001" class="slider" step="0.0001" id="sigma" oninput="getSigmaVal()">
 					</div>
 					<div class="slidercontainer">
-						<label for="sample" class="form-label">Nombre Echantillon : <span id="sampleVal">1</span></label>
+						<label for="sample" class="form-label">Nombre Echantillon : <span id="sampleVal">1.0</span></label>
 						<br/>
-						<input type="range" min="1" max="100" value="1" class="slider" step="1" id="sample" oninput="getSampleVal()">
+						<input type="range" min="1.0" max="200.0" value="1.0" class="slider" step="1.0" id="sample" oninput="getSampleVal()">
+					</div>
+					<div class="slidercontainer">
+						<label for="lumino" class="form-label">Luminosité : <span id="luminoVal">1.0</span></label>
+						<br/>
+						<input type="range" min="1.0" max="100.0" value="1.0" class="slider" step="1.0" id="lumino" oninput="getLuminoVal()">
 					</div>
 					<div>
 						<label for="colorchooser">Choix Couleur :</label>

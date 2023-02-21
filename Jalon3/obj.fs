@@ -18,7 +18,8 @@ uniform samplerCube uSkybox;
 uniform float uRefracValue;
 uniform float uSigmaValue;
 
-uniform int uNbSample;
+uniform float uNbSample;
+uniform float uLumino;
 
 uniform vec3 uLightSource;
 uniform vec3 uColorObj;
@@ -26,13 +27,13 @@ uniform vec3 uColorObj;
 // ==============================================
 
 vec4 refraction(vec3 I, vec3 N, float ratio){
-	vec3 Refraction = refract(I, normalize(N), ratio);
+	vec3 Refraction = refract(I, N, ratio);
 	Refraction = vec3(rMat * vec4(Refraction, 1.0));
 	return textureCube(uSkybox, Refraction.xzy);
 }
 
 vec4 reflection(vec3 I, vec3 N){
-	vec3 Reflection = reflect(I, normalize(N));
+	vec3 Reflection = reflect(I, N);
 	Reflection = vec3(rMat * vec4(Reflection, 1.0));
 	return textureCube(uSkybox, Reflection.xzy);
 }
@@ -103,9 +104,11 @@ vec3 echantillonage(vec3 o, vec3 N){
 
 	int nbIter = 0;
 	vec3 Lo = vec3(0.0);
-	for(int j = 0; j<200; j++){
-		// if(j >= uNbSample)
-		// 	continue;
+	for(float j = 0.0; j<200.0; j++){
+		if(j >= uNbSample){
+
+			break;
+		}
 
 		vec3 m = randM();
 		m = matRot * m;
@@ -123,7 +126,7 @@ vec3 echantillonage(vec3 o, vec3 N){
 		float IdotM = dot(normalize(i),normalize(m));
 
 		if(NdotI < 0.001 || NdotO < 0.001 || NdotM < 0.001)
-			continue;
+			break;
 		
 		float F = fresnel(i, m, uRefracValue);
 		float D = beckmann(cosT, uSigmaValue, pi);
@@ -138,6 +141,9 @@ vec3 echantillonage(vec3 o, vec3 N){
 		Lo += Li * brdf * NdotI / pdf;
 
 		// Lo += textureCube(uSkybox, i.xzy);
+		if(j >= uNbSample){
+			break;
+		}
 		nbIter++; 
 	}
 
@@ -157,20 +163,21 @@ void main(void)
 {
 	float ratio = 1.0 / uRefracValue;
 	vec3 I = normalize(pos3D.xyz);
+	vec3 Nn = normalize(N);
 
 	vec4 textRefrac;
 	vec4 textMirror;
 
 	// calcul de la refraction
 	if(uIsRefrac){
-		textRefrac = refraction(I, N, ratio);
+		textRefrac = refraction(I, Nn, ratio);
 	}else{
 		textRefrac = vec4(0,0,0,0);
 	}
 
 	// calcul de la reflection
 	if(uIsMirror){
-		textMirror = reflection(I, N);
+		textMirror = reflection(I, Nn);
 	}else{
 		textMirror = vec4(0,0,0,0);
 	}
