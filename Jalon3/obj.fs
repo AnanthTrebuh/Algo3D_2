@@ -147,7 +147,7 @@ void main(void)
 		float OdotM = ddot(o, M); //dot(normalize(o),normalize(M));
 		float IdotM = ddot(i, M); //dot(normalize(i),normalize(M));
 
-		float F = fresnel(I, M, uRefracValue);
+		float F = fresnel(i, M, uRefracValue);
 		float D = beckmann(cosT, uSigmaValue);
 		float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
 

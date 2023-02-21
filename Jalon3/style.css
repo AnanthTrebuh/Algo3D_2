@@ -35,7 +35,7 @@
   display: none;
 }
 
-#divMirrorSwitch
+#lbMirrorSwitchOpt
 {
   display: none;
 }
@@ -45,7 +45,7 @@
   display: inline-block;
 }
 
-#mirrorSwitch:checked ~ #divMirrorSwitch
+#mirrorSwitch:checked ~ #lbMirrorSwitchOpt
 {
   display: inline-block;
 }
