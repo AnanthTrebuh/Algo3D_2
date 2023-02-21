@@ -18,7 +18,7 @@ uniform samplerCube uSkybox;
 uniform float uRefracValue;
 uniform float uSigmaValue;
 
-uniform float uNbSample;
+uniform int uNbSample;
 uniform float uLumino;
 
 uniform vec3 uLightSource;
@@ -78,10 +78,10 @@ float rand(vec2 co){
 }
 
 vec3 randM(int i){
-	vec2 ran = pos3D.xy;
+	vec2 ran = (rMat*(vec4(gl_FragCoord.xy,0.,0.)+1.0)).xy;
 
-	float ksi1 = rand(ran);
-	float ksi2 = rand(ran + ksi1 + float(i + 1));
+	float ksi1 = rand(ran + 2.*float(i));
+	float ksi2 = rand(ran + 2.*float(i) + 1.);
 
 	float phi = 2.0 * pi * ksi2;
 	float theta = atan(sqrt(-uSigmaValue*uSigmaValue * log(1.0-ksi1)));
@@ -177,7 +177,7 @@ void main(void)
 		float NdotM;
 
 		for(int j = 0; j<100; j++){
-			if(j>uNbSample) break;
+			if(nbIter>uNbSample) break;
 			//if(j>=uNbSample) break;
 
 			m = randM(j);
@@ -220,7 +220,7 @@ void main(void)
 
 		// vec3 Lo = echantillonage(o,Nn);
 
-		gl_FragColor = vec4(Lo*5.0, 1.0);
+		gl_FragColor = vec4(Lo*uLumino, 1.0);
 		//gl_FragColor = vec4(NdotM,0.0,0.0,1.0);
 	}
 	else {

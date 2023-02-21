@@ -102,9 +102,9 @@ class objmesh {
 		gl.uniform1i(this.shader.isRefracUniform, this.isRefrac);
 		gl.uniform1i(this.shader.isCookTor, this.isCookTor);
 		gl.uniform1i(this.shader.isSample, this.isSample);
+		gl.uniform1i(this.shader.nbSample, nbSample);
 		gl.uniform1f(this.shader.refractValue, sliderValue);
 		gl.uniform1f(this.shader.sigmaValue, sigmaValue);
-		gl.uniform1f(this.shader.nbSample, nbSample);
 		gl.uniform1f(this.shader.lumino, lumino);
 		gl.uniform3fv(this.shader.lightSource, lightSource);
 		gl.uniform3fv(this.shader.color, color);
