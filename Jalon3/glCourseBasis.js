@@ -111,7 +111,7 @@ class objmesh {
 		gl.uniform1f(this.shader.lumino, lumino);
 		gl.uniform3fv(this.shader.lightSource, lightSource);
 		gl.uniform3fv(this.shader.color, color);
-		gl.uniform1i(this.shader.isDepoli, isDepoli);
+		gl.uniform1i(this.shader.isDepoli, this.isDepoli);
 
 	}
 	
