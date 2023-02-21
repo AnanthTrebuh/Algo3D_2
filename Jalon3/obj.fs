@@ -125,7 +125,7 @@ vec3 cookTorrance(vec3 Nn, vec3 o){
 	return L;
 }
 
-vec3 echantillonageImportance(vec3 Nn, vec3 o){	
+mat3 getMatRotM(vec3 Nn){
 	vec3 iN = vec3(1.0,0.0,0.0);
 	if(dot(normalize(iN), Nn) > 0.9){
 		iN = vec3(0.0,1.0,0.0);
@@ -134,11 +134,15 @@ vec3 echantillonageImportance(vec3 Nn, vec3 o){
 	iN = normalize(cross(Nn, jN));
 
 	mat3 matRot = mat3(iN, jN, Nn);
+	return matRot;
+}
 
+vec3 echantillonageImportance(vec3 Nn, vec3 o){	
+	
+	mat3 matRot = getMatRotM(Nn);
 	int nbIter = 0;
 	vec3 Lo = vec3(0.0);
 	vec3 m;
-	float NdotM;
 
 	for(int j = 0; j<100; j++){
 		if(nbIter>uNbSample) break;
@@ -149,8 +153,7 @@ vec3 echantillonageImportance(vec3 Nn, vec3 o){
 
 		vec3 i = reflect(-o, m);
 
-		NdotM = ddot(Nn, m); 
-	
+		float NdotM = ddot(Nn, m); 
 		float NdotI = ddot(Nn, i); 
 		float NdotO = ddot(Nn, o); 
 		float OdotM = ddot(o, m); 
