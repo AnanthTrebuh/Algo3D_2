@@ -94,12 +94,6 @@ vec3 randM(int i){
 	return m;
 }
 
-mat3 transpose(mat3 m) {
-    return mat3(m[0][0], m[1][0], m[2][0],
-                m[0][1], m[1][1], m[2][1],
-                m[0][2], m[1][2], m[2][2]);
-}
-
 vec3 cookTorrance(vec3 Nn, vec3 o){
 	vec3 lightSource = uLightSource;
 
@@ -135,6 +129,31 @@ mat3 getMatRotM(vec3 Nn){
 
 	mat3 matRot = mat3(iN, jN, Nn);
 	return matRot;
+}
+
+vec3 mirroirPoli(vec3 Nn, vec3 o){
+	mat3 matRot = getMatRotM(Nn);
+	int nbIter = 0;
+	vec3 Lo = vec3(0.0);
+	vec3 m;
+
+	for(int j = 0; j<100; j++){
+		if(nbIter>uNbSample) break;
+
+		m = randM(j);
+		m = matRot * m;
+		m = normalize(m);
+
+		vec3 i = reflect(-o, m);
+		i = vec3(rMat * vec4(i, 1.0));
+		vec3 Li = textureCube(uSkybox, i.xzy).xyz;
+		Lo += Li;
+
+		nbIter++; 
+	}
+
+	Lo /= float(nbIter);
+	return Lo;
 }
 
 vec3 echantillonageImportance(vec3 Nn, vec3 o){	
@@ -181,6 +200,7 @@ vec3 echantillonageImportance(vec3 Nn, vec3 o){
 	Lo /= float(nbIter);
 	return Lo;
 }
+
 void main(void)
 {
 	float ratio = 1.0 / uRefracValue;
@@ -198,7 +218,8 @@ void main(void)
 	}
 	else if (uIsMirror){
 		if(uIsDepoli){
-			gl_FragColor = vec4(0.0,0.0,0.0,1.0);
+			vec3 Lo = mirroirPoli(Nn, o);
+			gl_FragColor = vec4(Lo, 1.0);
 		}else{
 			gl_FragColor = textMirror;			
 		}

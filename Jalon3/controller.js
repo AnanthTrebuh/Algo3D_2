@@ -9,6 +9,7 @@ function setMirror() {
 	OBJ1.isDepoli = false;
 	document.getElementById("cookTorSwitch").checked=false;
 	document.getElementById("echantillonnage").checked=false;
+	document.getElementById("mirrorSwitchOpt").disabled=false;
 	if(!isMirror) {
 		document.getElementById("refractSwitch").checked=false;
 		document.getElementById("mirrorSwitchOpt").checked=false;
@@ -32,8 +33,10 @@ function setRefrac() {
 	document.getElementById("cookTorSwitch").checked=false;
 	document.getElementById("echantillonnage").checked=false;
 	document.getElementById("mirrorSwitchOpt").checked=false;
+	document.getElementById("mirrorSwitchOpt").disabled=false;
 	if(isRefrac){
 		document.getElementById("mirrorSwitch").checked=true;
+		document.getElementById("mirrorSwitchOpt").disabled=true;
 		isMirror = true;
 		OBJ1.isMirror = true;
 	}
