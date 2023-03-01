@@ -198,7 +198,7 @@ vec3 echantillonageImportance(vec3 Nn, vec3 o){
 		float NdotO = ddot(Nn, o); 
 		float OdotM = ddot(o, m); 
 		float IdotM = ddot(i, m); 
-
+		
 		if(NdotI < 0.0001 || NdotO < 0.0001 || NdotM < 0.0001 || OdotM < 0.0001 || IdotM < 0.0001){
 			continue;
 		}
