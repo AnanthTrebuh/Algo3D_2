@@ -9,12 +9,30 @@
   right: 0;
   margin-right: 10px;
   width: fit-content;
-  height: fir-content;
+  height: fit-content;
   border-radius: 5px;
   background-color: rgb(255,255,255);
   padding: 1em;
 }
 
+.slidercontainer {
+  padding-bottom: 12px;
+  border-color: black;
+  border-left : 0px; 
+  border-right : 0px;
+  border-top : 1px;
+  border-bottom: 0px; 
+  border-style: solid;
+}
+.choosecolorcontainer{
+  padding-top: 5px;
+  border-color: black;
+  border-left : 0px; 
+  border-right : 0px;
+  border-top : 1px;
+  border-bottom: 0px; 
+  border-style: solid;
+}
 .scene{
   position: relative;
   width: 100vw;
