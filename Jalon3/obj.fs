@@ -89,6 +89,9 @@ float rand(vec2 co){
 
 // ==============================================
 
+/**
+ * Génere un vecteur m aléatoire
+*/
 vec3 randM(int i){
 	vec2 ran = (rMat*(vec4(gl_FragCoord.xy,0.,0.)+1.0)).xy;
 
@@ -126,7 +129,6 @@ vec3 cookTorrance(vec3 Nn, vec3 o){
 	float D = beckmann(cosT, uSigmaValue);
 	float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
 
-	// vec3 brdf = vec3((F * D * G) / (4.0 * NdotI * NdotO));
 	float brdf = (F * D * G) / (4.0 * NdotI * NdotO);
 	vec3 diffuse = Kd/pi * (1.0 - F);
 	vec3 Fr = diffuse + brdf;
@@ -136,6 +138,9 @@ vec3 cookTorrance(vec3 Nn, vec3 o){
 
 // ==============================================
 
+/**
+ * Génere une matrice de rotation pour le vecteur m
+*/
 mat3 getMatRotM(vec3 Nn){
 	vec3 iN = vec3(1.0,0.0,0.0);
 	if(dot(normalize(iN), Nn) > 0.9){
@@ -185,7 +190,7 @@ vec3 echantillonageImportance(vec3 Nn, vec3 o){
 	vec3 m;
 
 	for(int j = 0; j<100; j++){
-		if(nbIter>uNbSample) break;
+		if(nbIter>uNbSample) break; // On sort de la boucle quand on a atteint le nombre d'échantillon voulus
 
 		m = randM(j);
 		m = matRot * m;
@@ -199,7 +204,7 @@ vec3 echantillonageImportance(vec3 Nn, vec3 o){
 		float OdotM = ddot(o, m); 
 		float IdotM = ddot(i, m); 
 
-		if(NdotI < 0.0001 || NdotO < 0.0001 || NdotM < 0.0001 || OdotM < 0.0001 || IdotM < 0.0001){
+		if(NdotI < 0.0001 || NdotO < 0.0001 || NdotM < 0.0001 || OdotM < 0.0001 || IdotM < 0.0001){ // Teste pour éviter de diviser par 0
 			continue;
 		}
 		
@@ -221,7 +226,9 @@ vec3 echantillonageImportance(vec3 Nn, vec3 o){
 	Lo /= float(nbIter);
 	return Lo;
 }
+
 // ==============================================
+
 void main(void)
 {
 	float ratio = 1.0 / uRefracValue;
@@ -232,28 +239,28 @@ void main(void)
 	vec4 textRefrac = refraction(I, Nn, ratio);;
 	vec4 textMirror = reflection(I, Nn);
 
-	if(uIsMirror && uIsRefrac){
+	if(uIsMirror && uIsRefrac){  // reflexion + transmission (Fresnal)
 		float R = fresnel(I, Nn, uRefracValue);
 		float T = 1.0 - R;
 		gl_FragColor = (textRefrac * T) + (textMirror * R);    
 	}
-	else if (uIsMirror){
-		if(uIsDepoli){
+	else if (uIsMirror){ // reflexion 
+		if(uIsDepoli){		// miroir Depoli
 			vec3 Lo = mirroirPoli(Nn, o);
-			gl_FragColor = vec4(Lo, 1.0);
-		}else{
-			gl_FragColor = textMirror;			
+			gl_FragColor = vec4(Lo*uLumino, 1.0);
+		}else{				// miroir 
+			gl_FragColor = textMirror*uLumino;			
 		}
 	}
-	else if(uIsCookTor){
+	else if(uIsCookTor){ // Cook Torrance
 		vec3 L = cookTorrance(Nn,o);
-		gl_FragColor = vec4(L,1.0);
+		gl_FragColor = vec4(L*uLumino,1.0);
 	}
-	else if (uIsSample){
+	else if (uIsSample){ // Echantillonage Importance
 		vec3 Lo = echantillonageImportance(Nn, o);
 		gl_FragColor = vec4(Lo*uLumino, 1.0);
 	}
-	else {
+	else {	// Couleur de base
 		vec3 col = uColorObj * dot(Nn,normalize(vec3(-pos3D))); // Lambert rendering, eye light source
 		gl_FragColor = vec4(col,1.0);
 	}

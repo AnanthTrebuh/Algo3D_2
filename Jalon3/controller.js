@@ -19,7 +19,7 @@ function setMirror() {
 	}
 }
 
-/*=========================*/
+// ==============================================
 
 function setRefrac() {
 	isRefrac = !isRefrac;
@@ -42,7 +42,7 @@ function setRefrac() {
 	}
 }
 
-/*=========================*/
+// ==============================================
 
 function setCookTor() {
 	isCookTor = !isCookTor;
@@ -61,7 +61,7 @@ function setCookTor() {
 	document.getElementById("mirrorSwitchOpt").checked=false;
 }
 
-/*=========================*/
+// ==============================================
 
 function setEchantillonnage(){
 	isSample = ! isSample;
@@ -80,41 +80,41 @@ function setEchantillonnage(){
 	document.getElementById("mirrorSwitchOpt").checked=false;
 }
 
-/*=========================*/
+// ==============================================
 
 function changeImage(numImage) {
 	textureCube = textures[numImage];
 }
 
-/*=========================*/
+// ==============================================
 
 function getSliderVal() {
 	sliderValue =  document.getElementById("slider").value;
 	document.getElementById("refract").innerHTML=sliderValue;
 }
 
-/*=========================*/
+// ==============================================
 
 function getSigmaVal(){
 	sigmaValue = document.getElementById("sigma").value;
 	document.getElementById("sigmaVal").innerHTML=sigmaValue;
 }
 
-/*=========================*/
+// ==============================================
 
 function getSampleVal(){
 	nbSample = document.getElementById("sample").value;
 	document.getElementById("sampleVal").innerHTML=nbSample;
 }
 
-/*=========================*/
+// ==============================================
 
 function getLuminoVal(){
 	lumino = document.getElementById("lumino").value;
 	document.getElementById("luminoVal").innerHTML=lumino;
 }
 
-/*=========================*/
+// ==============================================
 
 function changeObj(object){
 	objet = 'obj/'+object+'.obj';
@@ -122,14 +122,14 @@ function changeObj(object){
 	OBJ1.draw();
 }
 
-/*=========================*/
+// ==============================================
 
 function getColorVal(){
 	var colorTemp = hexToRgb(document.getElementById("colorchooser").value);
 	color = [colorTemp.r/255,colorTemp.g/255,colorTemp.b/255];
 }
 
-/*=========================*/
+// ==============================================
 
 /*Permet de récupérer le code Hex pour le tranformer en rgb*/
 function hexToRgb(hex) {
@@ -141,10 +141,9 @@ function hexToRgb(hex) {
 	} : null;
 }
 
-/*=========================*/
+// ==============================================
 
 function setDepoli(){
-	console.log("depoli");
 	isDepoli = !isDepoli;
 	OBJ1.isDepoli = !OBJ1.isDepoli;
 }
