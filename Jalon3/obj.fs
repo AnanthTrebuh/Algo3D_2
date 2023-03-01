@@ -94,6 +94,8 @@ vec3 randM(int i){
 	return m;
 }
 
+
+
 vec3 cookTorrance(vec3 Nn, vec3 o){
 	vec3 lightSource = uLightSource;
 
@@ -112,7 +114,8 @@ vec3 cookTorrance(vec3 Nn, vec3 o){
 	float D = beckmann(cosT, uSigmaValue);
 	float G = masking(NdotM,NdotI, NdotO, OdotM, IdotM);
 
-	vec3 brdf = vec3((F * D * G) / (4.0 * NdotI * NdotO));
+	// vec3 brdf = vec3((F * D * G) / (4.0 * NdotI * NdotO));
+	float brdf = (F * D * G) / (4.0 * NdotI * NdotO);
 	vec3 diffuse = Kd/pi * (1.0 - F);
 	vec3 Fr = diffuse + brdf;
 	vec3 L = (2.0) * Fr * NdotI;
