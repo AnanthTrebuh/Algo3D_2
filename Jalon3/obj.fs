@@ -33,16 +33,20 @@ vec4 refraction(vec3 I, vec3 N, float ratio){
 	return textureCube(uSkybox, Refraction.xzy);
 }
 
+// ==============================================
 vec4 reflection(vec3 I, vec3 N){
 	vec3 Reflection = reflect(I, N);
 	Reflection = vec3(rMat * vec4(Reflection, 1.0));
 	return textureCube(uSkybox, Reflection.xzy);
 }
 
+// ==============================================
+
 float ddot(vec3 a, vec3 b){
 	return max(0.0,dot(a,b));
 }
 
+// ==============================================
 
 float fresnel(vec3 I, vec3 N, float uRefracValue){
 	float c = abs(dot(I, N));
@@ -52,6 +56,8 @@ float fresnel(vec3 I, vec3 N, float uRefracValue){
 			( 1.0 + (((c * (g+c)-1.0) * (c * (g+c)-1.0)) / ((c * (g-c)+1.0) * (c * (g-c)+1.0) )));
 	return R;
 }
+
+// ==============================================
 
 float beckmann(float cosT, float sigma){
 	float sigma2 = sigma * sigma;
@@ -66,6 +72,8 @@ float beckmann(float cosT, float sigma){
 	return D;
 }
 
+// ==============================================
+
 float masking(float NdotM,float NdotI, float NdotO, float OdotM, float IdotM){
 	float G1 = 2.0 * NdotM * NdotI / IdotM;
 	float G2 = 2.0 * NdotM * NdotO / OdotM;
@@ -73,9 +81,13 @@ float masking(float NdotM,float NdotI, float NdotO, float OdotM, float IdotM){
 	return G;
 }
 
+// ==============================================
+
 float rand(vec2 co){
     return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
 }
+
+// ==============================================
 
 vec3 randM(int i){
 	vec2 ran = (rMat*(vec4(gl_FragCoord.xy,0.,0.)+1.0)).xy;
@@ -94,7 +106,7 @@ vec3 randM(int i){
 	return m;
 }
 
-
+// ==============================================
 
 vec3 cookTorrance(vec3 Nn, vec3 o){
 	vec3 lightSource = uLightSource;
@@ -122,6 +134,8 @@ vec3 cookTorrance(vec3 Nn, vec3 o){
 	return L;
 }
 
+// ==============================================
+
 mat3 getMatRotM(vec3 Nn){
 	vec3 iN = vec3(1.0,0.0,0.0);
 	if(dot(normalize(iN), Nn) > 0.9){
@@ -133,6 +147,8 @@ mat3 getMatRotM(vec3 Nn){
 	mat3 matRot = mat3(iN, jN, Nn);
 	return matRot;
 }
+
+// ==============================================
 
 vec3 mirroirPoli(vec3 Nn, vec3 o){
 	mat3 matRot = getMatRotM(Nn);
@@ -158,6 +174,8 @@ vec3 mirroirPoli(vec3 Nn, vec3 o){
 	Lo /= float(nbIter);
 	return Lo;
 }
+
+// ==============================================
 
 vec3 echantillonageImportance(vec3 Nn, vec3 o){	
 	
@@ -203,7 +221,7 @@ vec3 echantillonageImportance(vec3 Nn, vec3 o){
 	Lo /= float(nbIter);
 	return Lo;
 }
-
+// ==============================================
 void main(void)
 {
 	float ratio = 1.0 / uRefracValue;
