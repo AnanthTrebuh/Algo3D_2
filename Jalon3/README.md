@@ -1,20 +1,25 @@
-# Algo3D_2
-# 1er jalon
-# Nathan Hubert
-# Jolan Lenglet
+# Algo3D Jalon 3 Hubert & Lenglet 
 
-Interface : 
+## Interface
 
-canvas with the scene to display.
+Canvas avec la scene à afficher et l'objet qui est le Bunny par défault
 
-Two switch.
-One for activate the mirror function of the object.
-The other for activate the refraction function of the object.
-If both activate the frenel coeficient is calculate. 
+Une interface javascript de contrôle permettant de manipuler les différent paramètre se trouve sur la droite supérieur de l'écran.
 
-A slider to determine the coeficient of refraction. 
+Vous pouvez activer la checkbox "Miroir" pour activer le miroir
 
-then four image that correspond to the skybox you can change by click on. 
+Vous pouvez activer la checkbox "Refraction", qui activera le miroir en même temps (demander par M. Meneveaux), pour observer les deux effet en même temps.
 
-a select dropdown to select the object you want in the scene.
+Une checkbox pour l'effet de cook et torrence est activable avec une lumière posé en 0,0,0.  
+Quand vous activer Cook et torrence le miroir et la refraction se désactive s'il sont activés.  
+Pour déplacer la lumière il suffit de maintenir la touche "ctrl" et de déplacer la souris en cliquant sur la scène.
 
+Vous avez en dessous de toutes les checkbox deux sliders.  
+Le premier sert à modifier le taux de réfraction ni qui se trouve entre 1,0 et 3,0.   
+Le second sert à modifier le taux de rugosité sigma qui se trouve entre 0,1 et 1,0. 
+
+Vous avez ensuite un Color Chooser pour modifier la couleur de l'objet Kd. 
+
+Vous pouvez modifier l'univers de la cubemap en choisissant l'image qui vous plait le plus. 
+
+Vous avez une list dropdown pour sélectionner l'objet à afficher. 
